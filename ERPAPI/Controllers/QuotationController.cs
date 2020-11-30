@@ -21,14 +21,7 @@ namespace ERPAPI.Controllers
         String DBPwd = ConfigurationManager.AppSettings["DBPwd"].ToString();
         DAL_Quotation obj;
         DAL_General objGen;
-        //[HttpGet]
-        //[Route("getdetails")]
-        //public HttpResponseMessage LoadDetails()
-        //{
-        //    ResponseObject res = new ResponseObject();
-        //    return Request.CreateResponse(HttpStatusCode.OK, res);
-        //}
-
+        
         [HttpGet]
         [Route("getcustomersalesman")]
         public HttpResponseMessage CustomerAndSalesman(int cid)
