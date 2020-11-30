@@ -1,0 +1,33 @@
+﻿Public Class csEmployeeMasterSub
+    Public str_PreStreet As String = ""
+    Public str_PreArea As String = ""
+    Public str_PreCity As String = ""
+    Public str_PreState As String = ""
+    Public str_PrePincode As String = ""
+    Public str_PreCountry As String = ""
+    Public str_PreTel As String = ""
+    Public str_PreExtension As String = ""
+    Public str_PerStreet As String = ""
+    Public str_PerArea As String = ""
+    Public str_PerCity As String = ""
+    Public str_PerPincode As String = ""
+    Public str_PerCountry As String = ""
+    Public str_PerTel As String = ""
+    Public str_PerExtension As String = ""
+    Public str_PerMobile1 As String = ""
+    Public str_PerMobile2 As String = ""
+    Public str_PerEmail1 As String = ""
+    Public str_PerEmail2 As String = ""
+    Public str_PerState As String = ""
+    Public int_TimeZone As Integer = 0
+    Public int_GradeID As Integer = 0
+    Public str_BranchName As String = ""
+    Public str_BankAccName As String = ""
+    Public str_BankAccType As String = ""
+    Public str_Town As String = ""
+    Public int_CostPerHr As Integer = 0
+    Public str_Password As String = ""
+    Public str_AuthGrp As String = ""
+    Public str_GroupID As String = ""
+    Public str_CreateLogin As String = 0
+End Class

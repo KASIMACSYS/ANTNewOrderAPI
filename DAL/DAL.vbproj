@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0B23C493-4D42-4C16-B717-17CC9FB824A4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DAL</RootNamespace>
+    <AssemblyName>DAL</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>DAL.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>DAL.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AES_Cryptography">
+      <HintPath>..\..\..\..\..\..\..\..\Desktop\V3.0\DLL\AES_Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel">
+      <HintPath>..\..\..\..\..\..\..\..\Desktop\V3.0\DLL\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DAL_AuthModule.vb" />
+    <Compile Include="DAL_EmpAttendance.vb" />
+    <Compile Include="DAL_Logistics.vb" />
+    <Compile Include="DAL_BoardProduction.vb" />
+    <Compile Include="DAL_MaterialSampleOrder.vb" />
+    <Compile Include="DAL_MenuGrouping.vb" />
+    <Compile Include="DAL_PackingList.vb" />
+    <Compile Include="DAL_POT.vb" />
+    <Compile Include="DAL_RecurrentPayment.vb" />
+    <Compile Include="DAL_SalaryHead.vb" />
+    <Compile Include="DAL_Budget.vb" />
+    <Compile Include="DAL_EmpAdvanceRequest.vb" />
+    <Compile Include="DAL_MultiApprovalLedger.vb" />
+    <Compile Include="DAL_PSTemplate.vb" />
+    <Compile Include="DAL_SalesManGrouping.vb" />
+    <Compile Include="DAL_SMSEmailConfig.vb" />
+    <Compile Include="DAL_SubmittalLog.vb" />
+    <Compile Include="DAL_TaxFileAdjustment.vb" />
+    <Compile Include="DAL_TaxFileReturn.vb" />
+    <Compile Include="DAL_TaxGroup.vb" />
+    <Compile Include="DAL_TaxMaster.vb" />
+    <Compile Include="DAL_AirwayBill.vb" />
+    <Compile Include="DAL_Asset.vb" />
+    <Compile Include="DAl_AssetGrouping.vb" />
+    <Compile Include="DAL_Batch.vb" />
+    <Compile Include="DAL_Bin.vb" />
+    <Compile Include="DAL_ChequePrint.vb" />
+    <Compile Include="DAL_CostCentreMaster.vb" />
+    <Compile Include="DAL_EnquiryForm.vb" />
+    <Compile Include="DAL_Task.vb" />
+    <Compile Include="DAL_BalanceSheet.vb" />
+    <Compile Include="DAL_BankCheque.vb" />
+    <Compile Include="DAL_BOM.vb" />
+    <Compile Include="DAL_ChangePassword.vb" />
+    <Compile Include="DAL_CounterPurchase.vb" />
+    <Compile Include="DAL_CounterSales.vb" />
+    <Compile Include="DAL_CRDR.vb" />
+    <Compile Include="DAL_CurrencyMaster.vb" />
+    <Compile Include="DAL_CustomizedItemReport.vb" />
+    <Compile Include="DAL_CustomsInvoice.vb" />
+    <Compile Include="DAL_DefaultLedger.vb" />
+    <Compile Include="DAL_DisplayConfigSettings.vb" />
+    <Compile Include="DAL_Do.vb" />
+    <Compile Include="DAL_DropdownList.vb" />
+    <Compile Include="DAL_EmpAtt.vb" />
+    <Compile Include="DAL_EmpCategory.vb" />
+    <Compile Include="DAL_EmpExpiryDetails.vb" />
+    <Compile Include="DAL_EmployeeMaster.vb" />
+    <Compile Include="DAL_EmpPaySlip.vb" />
+    <Compile Include="DAL_EmpPaySlipPayment.vb" />
+    <Compile Include="DAL_EmpSalHike.vb" />
+    <Compile Include="DAL_EmpVacation.vb" />
+    <Compile Include="DAL_EOS.vb" />
+    <Compile Include="DAL_Estimation.vb" />
+    <Compile Include="DAL_Excel.vb" />
+    <Compile Include="DAL_ExpiryDetails.vb" />
+    <Compile Include="DAL_FormGridSettings.vb" />
+    <Compile Include="DAL_FormSettings.vb" />
+    <Compile Include="DAL_General.vb" />
+    <Compile Include="DAL_GeneralParameter.vb" />
+    <Compile Include="DAL_GeneralVoucher.vb" />
+    <Compile Include="DAL_GrpMgt.vb" />
+    <Compile Include="DAL_Indent.vb" />
+    <Compile Include="DAL_IssueVoucher.vb" />
+    <Compile Include="DAL_ItemCost.vb" />
+    <Compile Include="DAL_ItemMaster.vb" />
+    <Compile Include="DAL_MinMaxQty.vb" />
+    <Compile Include="DAL_JobOrder.vb" />
+    <Compile Include="DAL_JV.vb" />
+    <Compile Include="DAL_LandingCost.vb" />
+    <Compile Include="DAL_LandingCostMaster.vb" />
+    <Compile Include="DAL_LeaveSalary.vb" />
+    <Compile Include="DAL_LedgerGrouping.vb" />
+    <Compile Include="DAL_LedgerMaster.vb" />
+    <Compile Include="DAL_LoginForm.vb" />
+    <Compile Include="DAL_Lpo.vb" />
+    <Compile Include="DAL_MainForms.vb" />
+    <Compile Include="DAL_MasterMain.vb" />
+    <Compile Include="DAL_MerchantMaster.vb" />
+    <Compile Include="DAL_Message.vb" />
+    <Compile Include="DAL_Mrv.vb" />
+    <Compile Include="DAL_PayCert.vb" />
+    <Compile Include="DAL_ProductGrouping.vb" />
+    <Compile Include="DAL_Production.vb" />
+    <Compile Include="DAL_ProductionMaster.vb" />
+    <Compile Include="DAL_ProjectMaster.vb" />
+    <Compile Include="DAL_PurchaseRTN.vb" />
+    <Compile Include="DAL_PV.vb" />
+    <Compile Include="DAL_Quotation.vb" />
+    <Compile Include="DAL_RV.vb" />
+    <Compile Include="DAL_SalesmanSettings.vb" />
+    <Compile Include="DAL_SalesOrder.vb" />
+    <Compile Include="DAL_SalesRTN.vb" />
+    <Compile Include="DAL_SiteMaster.vb" />
+    <Compile Include="DAL_StockAdjustment.vb" />
+    <Compile Include="DAL_StockTransfer.vb" />
+    <Compile Include="DAL_StockValuation.vb" />
+    <Compile Include="DAL_UserMgt.vb" />
+    <Compile Include="DAL_UserPriceList.vb" />
+    <Compile Include="DAL_WHMaster.vb" />
+    <Compile Include="DAL_WPS.vb" />
+    <Compile Include="DAL_WpsReportConfig.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SQLConn.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Classes\Classes.vbproj">
+      <Project>{64f55563-7ee3-406c-b626-359ed73431d7}</Project>
+      <Name>Classes</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
