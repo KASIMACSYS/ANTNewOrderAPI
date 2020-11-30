@@ -4698,4 +4698,23 @@ Public Class DAL_General
         End Try
         Return dt
     End Function
+
+    Public Function GetLatestBusinessPeriodID(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As Integer
+        GetLatestBusinessPeriodID = 101
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[GetLatestBusinessPeriodID]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            dt = New DataTable
+            BaseConn.da.Fill(dt)
+            GetLatestBusinessPeriodID = dt.Rows(0)(0)
+        Catch ex As Exception
+            MsgBox("Error" & ex.Message)
+        Finally
+            BaseConn.Close()
+        End Try
+        Return GetLatestBusinessPeriodID
+    End Function
 End Class

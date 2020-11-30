@@ -19,7 +19,8 @@ namespace ERPAPI.Controllers
     {
         String DBPath = ConfigurationManager.AppSettings["DBPath"].ToString();
         String DBPwd = ConfigurationManager.AppSettings["DBPwd"].ToString();
-
+        DAL_Quotation obj;
+        DAL_General objGen;
         //[HttpGet]
         //[Route("getdetails")]
         //public HttpResponseMessage LoadDetails()
@@ -38,15 +39,16 @@ namespace ERPAPI.Controllers
                 DataSet ds = new DataSet();
                 DataTable dtCustomer = new DataTable();
                 DataTable dtSalesman = new DataTable();
-                DAL_General obj = new DAL_General(cid.ToString());
-                dtCustomer = obj.GetCustomer(DBPath, DBPwd, cid);
+                objGen = new DAL_General(cid.ToString());
+
+                dtCustomer = objGen.GetCustomer(DBPath, DBPwd, cid);
                 if (dtCustomer.Rows.Count>0)
                 {
                     dtCustomer.TableName = "Customers";
                     ds.Tables.Add(dtCustomer);
                 }
 
-                dtSalesman = obj.GetSalesmanList(DBPath, DBPwd, cid);
+                dtSalesman = objGen.GetSalesmanList(DBPath, DBPwd, cid);
                 if (dtSalesman.Rows.Count > 0)
                 {
                     dtSalesman.TableName = "Salesman";
@@ -79,8 +81,8 @@ namespace ERPAPI.Controllers
             imagename = new string(Path.GetFileNameWithoutExtension(postedfile.FileName).Take(10).ToArray()).Replace(" ", "-");
             imagename = imagename + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(postedfile.FileName);
 
-            var filepath = HttpContext.Current.Server.MapPath("~/Image/" + imagename);
-            postedfile.SaveAs(filepath);
+            //var filepath = HttpContext.Current.Server.MapPath("~/Image/" + imagename);
+            //postedfile.SaveAs(filepath);
 
             string imageCaption = httprequest["ImageCaption"];
             string customerledger = httprequest["CustomerLedger"];
@@ -101,7 +103,7 @@ namespace ERPAPI.Controllers
             string errstring = string.Empty;
             int revno = 0;
             int errno = 0;
-            DAL_Quotation obj = new DAL_Quotation();
+            obj = new DAL_Quotation();
             csQuotation objcsqtn = CreateQtnObject(customerledger, customername, salesmanid);
 
             errstring = obj.Update_Quotation(DBPath, DBPwd, ref qtnNo, ref revno, objcsqtn, ref outsms, ref outemail, ref errno);
@@ -115,11 +117,12 @@ namespace ERPAPI.Controllers
         private csQuotation CreateQtnObject(int customerledger, string customername, int salesmanid)
         {
             Dictionary<string, string> objproj = new Dictionary<string, string>();
-
+            
             csQuotation objqtn = new csQuotation(objproj);
             objqtn.str_CID = "101";
+            objGen = new DAL_General(objqtn.str_CID);
             objqtn.objQuotationMain.str_QtnNo = "";
-            objqtn.objQuotationMain.int_BusinessPeriodID = 101;
+            objqtn.objQuotationMain.int_BusinessPeriodID = objGen.GetLatestBusinessPeriodID(DBPath, DBPwd,101);
             objqtn.objQuotationMain.str_Flag = "ADD";
             objqtn.objQuotationMain.int_RevNo = 0;
             objqtn.objQuotationMain.Str_QtnStatus = "Open";
