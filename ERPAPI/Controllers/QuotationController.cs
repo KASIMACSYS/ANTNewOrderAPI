@@ -31,7 +31,7 @@ namespace ERPAPI.Controllers
             {
                 DataSet ds = new DataSet();
                 DataTable dtCustomer = new DataTable();
-                DataTable dtSalesman = new DataTable();
+                //DataTable dtSalesman = new DataTable();
                 objGen = new DAL_General(cid.ToString());
 
                 dtCustomer = objGen.GetCustomer(DBPath, DBPwd, cid);
@@ -41,12 +41,12 @@ namespace ERPAPI.Controllers
                     ds.Tables.Add(dtCustomer);
                 }
 
-                dtSalesman = objGen.GetSalesmanList(DBPath, DBPwd, cid);
-                if (dtSalesman.Rows.Count > 0)
-                {
-                    dtSalesman.TableName = "Salesman";
-                    ds.Tables.Add(dtSalesman);
-                }
+                //dtSalesman = objGen.GetSalesmanList(DBPath, DBPwd, cid);
+                //if (dtSalesman.Rows.Count > 0)
+                //{
+                //    dtSalesman.TableName = "Salesman";
+                //    ds.Tables.Add(dtSalesman);
+                //}
 
                 res.respdata = ds;
                 return Request.CreateResponse(HttpStatusCode.OK, res);
@@ -81,15 +81,16 @@ namespace ERPAPI.Controllers
             string customerledger = httprequest["CustomerLedger"];
             string customername = httprequest["CustomerName"];
             string salesmanid = httprequest["SalesmanID"];
+            string userid = httprequest["UserID"];
 
             Stream fs = postedfile.InputStream;
             BinaryReader br = new BinaryReader(fs);
             byte[] bytes = br.ReadBytes((Int32)fs.Length);
-            string result = createQuoation(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), bytes, imageCaption, imagetype);
+            string result = createQuoation(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), Convert.ToInt32(userid), bytes, imageCaption, imagetype);
             return Request.CreateResponse(HttpStatusCode.Created);
         }
 
-        private string createQuoation(int customerledger, string customername, int salesmanid, Byte[] image, string imagename, string imagetype)
+        private string createQuoation(int customerledger, string customername, int salesmanid, int userid, Byte[] image, string imagename, string imagetype)
         {
             string qtnNo = string.Empty;
             string outsms = string.Empty, outemail = string.Empty;
@@ -97,17 +98,17 @@ namespace ERPAPI.Controllers
             int revno = 0;
             int errno = 0;
             obj = new DAL_Quotation();
-            csQuotation objcsqtn = CreateQtnObject(customerledger, customername, salesmanid);
+            csQuotation objcsqtn = CreateQtnObject(customerledger, customername, salesmanid, userid);
 
             errstring = obj.Update_Quotation(DBPath, DBPwd, ref qtnNo, ref revno, objcsqtn, ref outsms, ref outemail, ref errno);
             //errstring = obj.Update_Quotation(ref qtnNo, ref revno, objcsqtn, ref outsms, ref outemail, ref errno);
             if (errstring == "" && qtnNo != "")
-                UpdateImage(objcsqtn.str_CID, objcsqtn.objQuotationMain.str_FormPrefix + qtnNo, image, imagename, imagetype);
+                UpdateImage(objcsqtn.str_CID, objcsqtn.objQuotationMain.str_FormPrefix + qtnNo, image, imagename, imagetype, userid.ToString());
 
             return qtnNo;
         }
 
-        private csQuotation CreateQtnObject(int customerledger, string customername, int salesmanid)
+        private csQuotation CreateQtnObject(int customerledger, string customername, int salesmanid, int userid)
         {
             Dictionary<string, string> objproj = new Dictionary<string, string>();
             
@@ -163,9 +164,9 @@ namespace ERPAPI.Controllers
             objqtn.objproject.str_ProjectLocation = "";
             objqtn.objproject.str_WorkOrderNo = "";
 
-            objqtn.CreatedBy = "Kasim";
+            objqtn.CreatedBy = userid.ToString();
             objqtn.CreatedDate = DateTime.Now;
-            objqtn.LastUpdatedBy = "kasim";
+            objqtn.LastUpdatedBy = userid.ToString();
             objqtn.LastUpdatedDate = DateTime.Now;
             objqtn.ApprovedBy = "";
             objqtn.ApprovedDate = DateTime.Now;
@@ -340,11 +341,10 @@ namespace ERPAPI.Controllers
             return (xmlstr);
         }
 
-        private void UpdateImage(string cid, string qtnno, Byte[] image, string imagename, string imagetype)
+        private void UpdateImage(string cid, string qtnno, Byte[] image, string imagename, string imagetype, string updatedby)
         {
             string errstring = string.Empty;
             int errno = 0;
-            string updatedby = "kasim";
             DateTime updateddate = DateTime.Now;
             string slno = "1";
             DAL_General obj = new DAL_General(cid);

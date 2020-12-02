@@ -195,9 +195,9 @@ Public Class DAL_UserMgt
         End Try
     End Sub
 
-    Public Sub GetUserDynamicDetails(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByVal _SiteID As String, ByVal _UserName As String, _
-                                        ByVal _Functionality As String, ByVal _Module As String, ByVal _Enable As Boolean, ByVal _DateType As String, _
-                                        ByVal _FromDate As Date, ByVal _ToDate As Date, ByRef _DTForms As DataTable, ByRef ErrNo As Integer, _
+    Public Sub GetUserDynamicDetails(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByVal _SiteID As String, ByVal _UserName As String,
+                                        ByVal _Functionality As String, ByVal _Module As String, ByVal _Enable As Boolean, ByVal _DateType As String,
+                                        ByVal _FromDate As Date, ByVal _ToDate As Date, ByRef _DTForms As DataTable, ByRef ErrNo As Integer,
                                         ByRef ErrStr As String)
         ErrNo = 0
         ErrStr = ""
@@ -227,4 +227,75 @@ Public Class DAL_UserMgt
             BaseConn.Close()
         End Try
     End Sub
+
+    Public Sub GetUserDetails(_StrDBPath As String, _StrDBPwd As String, cid As Integer, username As String, pwd As String, ADDomain As String, ADLogin As Boolean, ByRef errno As Integer,
+                              ByRef errdesc As String, ByRef dtUserdetails As DataTable)
+
+        errno = 0
+        errdesc = String.Empty
+        dtUserdetails = New DataTable
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[GetUserDetails]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", cid)
+            BaseConn.cmd.Parameters.AddWithValue("@UserName", username)
+            BaseConn.cmd.Parameters.AddWithValue("@ADDomain", ADDomain)
+            BaseConn.cmd.Parameters.AddWithValue("@ActiveDirectoryLogin", ADLogin)
+            BaseConn.cmd.Parameters.Add("@ElogDate", SqlDbType.Date).Direction = ParameterDirection.Output
+
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            'Dim ds As New DataSet
+            BaseConn.da.Fill(dtUserdetails)
+            Dim _MaxElogDate As DateTime
+            _MaxElogDate = Convert.ToDateTime(BaseConn.cmd.Parameters("@Elogdate").Value)
+        Catch ex As Exception
+            errno = 1
+            errdesc = ex.ToString()
+        Finally
+            BaseConn.Close()
+        End Try
+
+    End Sub
+
+    Public Function GetConfigParam(_StrDBPath As String, _StrDBPwd As String, ByVal cid As Integer) As DataTable
+        Dim dtConfigParam As New DataTable
+
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[GetConfigParam]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", cid)
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            'Dim ds As New DataSet
+            BaseConn.da.Fill(dtConfigParam)
+        Catch ex As Exception
+
+        Finally
+            BaseConn.Close()
+        End Try
+
+        Return dtConfigParam
+    End Function
+
+    Public Function GetSalesmanIDByLedgerID(_StrDBPath As String, _StrDBPwd As String, ByVal cid As Integer, ByVal ledgerid As Integer) As Integer
+        Dim salesmanid As Integer
+
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[GetSalesmanIDByLedgerID]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", cid)
+            BaseConn.cmd.Parameters.AddWithValue("@LedgerID", ledgerid)
+            BaseConn.cmd.Parameters.Add("@SalesmanID", SqlDbType.Int).Direction = ParameterDirection.Output
+            BaseConn.cmd.ExecuteNonQuery()
+            salesmanid = BaseConn.cmd.Parameters("@SalesmanID").Value
+        Catch ex As Exception
+
+        Finally
+            BaseConn.Close()
+        End Try
+
+        Return salesmanid
+    End Function
 End Class

@@ -44,6 +44,7 @@ namespace WebAPI
         public int groupid { get; set; }
         public string token { get; set; }
         public DataTable configparam { get; set; }
+        public int salesmanid { get; set; }
     }
     
 }
