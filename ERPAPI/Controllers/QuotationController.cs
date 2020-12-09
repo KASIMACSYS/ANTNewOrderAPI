@@ -81,16 +81,16 @@ namespace ERPAPI.Controllers
             string customerledger = httprequest["CustomerLedger"];
             string customername = httprequest["CustomerName"];
             string salesmanid = httprequest["SalesmanID"];
-            string userid = httprequest["UserID"];
+            string username = httprequest["UserName"];
 
             Stream fs = postedfile.InputStream;
             BinaryReader br = new BinaryReader(fs);
             byte[] bytes = br.ReadBytes((Int32)fs.Length);
-            string result = createQuoation(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), Convert.ToInt32(userid), bytes, imageCaption, imagetype);
+            string result = createQuoation(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), username, bytes, imageCaption, imagetype);
             return Request.CreateResponse(HttpStatusCode.Created);
         }
 
-        private string createQuoation(int customerledger, string customername, int salesmanid, int userid, Byte[] image, string imagename, string imagetype)
+        private string createQuoation(int customerledger, string customername, int salesmanid, string username, Byte[] image, string imagename, string imagetype)
         {
             string qtnNo = string.Empty;
             string outsms = string.Empty, outemail = string.Empty;
@@ -98,17 +98,17 @@ namespace ERPAPI.Controllers
             int revno = 0;
             int errno = 0;
             obj = new DAL_Quotation();
-            csQuotation objcsqtn = CreateQtnObject(customerledger, customername, salesmanid, userid);
+            csQuotation objcsqtn = CreateQtnObject(customerledger, customername, salesmanid, username);
 
             errstring = obj.Update_Quotation(DBPath, DBPwd, ref qtnNo, ref revno, objcsqtn, ref outsms, ref outemail, ref errno);
             //errstring = obj.Update_Quotation(ref qtnNo, ref revno, objcsqtn, ref outsms, ref outemail, ref errno);
             if (errstring == "" && qtnNo != "")
-                UpdateImage(objcsqtn.str_CID, objcsqtn.objQuotationMain.str_FormPrefix + qtnNo, image, imagename, imagetype, userid.ToString());
+                UpdateImage(objcsqtn.str_CID, objcsqtn.objQuotationMain.str_FormPrefix + qtnNo, image, imagename, imagetype, username);
 
             return qtnNo;
         }
 
-        private csQuotation CreateQtnObject(int customerledger, string customername, int salesmanid, int userid)
+        private csQuotation CreateQtnObject(int customerledger, string customername, int salesmanid, string username)
         {
             Dictionary<string, string> objproj = new Dictionary<string, string>();
             
@@ -164,13 +164,13 @@ namespace ERPAPI.Controllers
             objqtn.objproject.str_ProjectLocation = "";
             objqtn.objproject.str_WorkOrderNo = "";
 
-            objqtn.CreatedBy = userid.ToString();
+            objqtn.CreatedBy = username;
             objqtn.CreatedDate = DateTime.Now;
-            objqtn.LastUpdatedBy = userid.ToString();
+            objqtn.LastUpdatedBy = username;
             objqtn.LastUpdatedDate = DateTime.Now;
             objqtn.ApprovedBy = "";
             objqtn.ApprovedDate = DateTime.Now;
-            objqtn.ApprovedStatus = 0;
+            objqtn.ApprovedStatus = 1;
             objqtn.ApprovedComment = "";
 
             objqtn.objQuotationMain.str_UserComment = "";
@@ -294,7 +294,7 @@ namespace ERPAPI.Controllers
             drow["NetAmount"] = 0;
             drow["LCAmount"] = 0;
             drow["LCCostPrice"] = 0;
-            drow["DeliveredTotQty"] = 1;
+            drow["DeliveredTotQty"] = 0;
             drow["PartNo"] = "";
             drow["Comment"] = "";
             drow["Desc1"] = "";
