@@ -47,10 +47,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\AES_Cryptography.dll</HintPath>
     </Reference>
-    <Reference Include="Classes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL\Classes.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -125,6 +121,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Classes\Classes.vbproj">
+      <Project>{64f55563-7ee3-406c-b626-359ed73431d7}</Project>
+      <Name>Classes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.vbproj">
       <Project>{0b23c493-4d42-4c16-b717-17cc9fb824a4}</Project>
       <Name>DAL</Name>

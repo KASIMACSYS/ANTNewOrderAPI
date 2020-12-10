@@ -164,13 +164,13 @@ namespace ERPAPI.Controllers
             objqtn.objproject.str_ProjectLocation = "";
             objqtn.objproject.str_WorkOrderNo = "";
 
-            objqtn.CreatedBy = username;
-            objqtn.CreatedDate = DateTime.Now;
-            objqtn.LastUpdatedBy = username;
-            objqtn.LastUpdatedDate = DateTime.Now;
-            objqtn.ApprovedBy = "";
-            objqtn.ApprovedDate = DateTime.Now;
-            objqtn.ApprovedStatus = 1;
+            objqtn.str_CreatedBy = username;
+            objqtn.dtp_CreatedDate = DateTime.Now;
+            objqtn.str_LastUpdatedBy = "";
+            objqtn.dtp_LastUpdatedDate = DateTime.Now;
+            objqtn.str_ApprovedBy = "";
+            objqtn.dtp_ApprovedDate = DateTime.Now;
+            objqtn.bool_ApprovedStatus = 1;
             objqtn.ApprovedComment = "";
 
             objqtn.objQuotationMain.str_UserComment = "";
