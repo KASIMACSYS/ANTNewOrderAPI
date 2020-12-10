@@ -171,6 +171,7 @@ namespace ERPAPI.Controllers
             objqtn.str_ApprovedBy = "";
             objqtn.dtp_ApprovedDate = DateTime.Now;
             objqtn.bool_ApprovedStatus = 1;
+            objqtn.ApprovedHigherLevel = true;
             objqtn.ApprovedComment = "";
 
             objqtn.objQuotationMain.str_UserComment = "";
