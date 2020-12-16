@@ -234,6 +234,15 @@ namespace WebAPI.Controllers
             drow["TYPE"] = "FORM";
             dt.Rows.Add(drow);
 
+            drow = dt.NewRow();
+            drow["FormName"] = "Order List";
+            drow["MenuID"] = "ERP_500";
+            drow["Parent"] = "30";
+            drow["WebIcon"] = "av_timer";
+            drow["parameters"] = "";
+            drow["TYPE"] = "FORM";
+            dt.Rows.Add(drow);
+
             return dt;
         }
 
@@ -245,6 +254,7 @@ namespace WebAPI.Controllers
 
             DataRow drow;
 
+            //new order: start
             drow = dt.NewRow();
             drow["MenuID"] = "ERP_155";
             drow["Options"] = "Add";
@@ -264,6 +274,29 @@ namespace WebAPI.Controllers
             drow["MenuID"] = "ERP_155";
             drow["Options"] = "View";
             dt.Rows.Add(drow);
+            //new order: end
+
+            //order list: start
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_500";
+            drow["Options"] = "Add";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_500";
+            drow["Options"] = "Edit";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_500";
+            drow["Options"] = "Delete";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_500";
+            drow["Options"] = "View";
+            dt.Rows.Add(drow);
+            //order list: end
 
             return dt;
         }

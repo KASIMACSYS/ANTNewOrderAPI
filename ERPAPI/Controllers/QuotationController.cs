@@ -59,6 +59,36 @@ namespace ERPAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getsalesmanquotation")]
+        public HttpResponseMessage GetSalesmanQuotation(int cid, int salesmanid, DateTime fromdate, DateTime todate, string qtnstatus)
+        {
+            ResponseObject res = new ResponseObject();
+            try
+            {
+                int errno = 0;
+                string errstring = string.Empty;
+                DataSet ds = new DataSet();
+                DataTable dtSalesmanQuotation = new DataTable();
+                obj = new DAL_Quotation();
+
+                dtSalesmanQuotation = obj.GetSalesmanQuotation(DBPath, DBPwd, cid, salesmanid, fromdate, todate, qtnstatus, ref errno, ref errstring);
+                if (dtSalesmanQuotation.Rows.Count > 0)
+                {
+                    dtSalesmanQuotation.TableName = "SalesmanQuotation";
+                }
+                                
+                res.respdata = dtSalesmanQuotation;
+                return Request.CreateResponse(HttpStatusCode.OK, res);
+            }
+            catch (Exception e)
+            {
+                res.errno = 1;
+                res.errdesc = e.Message;
+                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
+            }
+        }
+
 
         [HttpPost]
         [Route("neworder")]
