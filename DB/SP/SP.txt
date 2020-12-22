@@ -142,3 +142,20 @@ CREATE PROCEDURE [dbo].[GetQuotationAgainstSalesman]
 		ORDER BY	CreatedDate
 END
 
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[MA_QuotationDashboard]
+ -- Add the parameters for the stored procedure here
+	 @CID			INT,
+	 @SalesManID	INT = 0
+ 
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN  --- load to ItemMCCB
+ SET NOCOUNT ON;
+ 
+	 select QtnStatus, Count(*) Cnt from [quotationMain] where cid = @CID and salesmanID = @SalesManID group by qtnstatus
+END

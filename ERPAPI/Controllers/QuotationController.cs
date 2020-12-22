@@ -133,18 +133,21 @@ namespace ERPAPI.Controllers
                 DataTable dtSalesmanQuotation = new DataTable();
                 obj = new DAL_Quotation();
 
-                //dtSalesmanQuotation = obj.GetSalesmanQuotation(DBPath, DBPwd, cid, salesmanid, ref errno, ref errstring);
-                dtSalesmanQuotation = GetQuotationDashboardDT();
-                for(int i=0; i<dtSalesmanQuotation.Rows.Count; i++)
+                dtSalesmanQuotation = obj.MA_QuotationDashboard(DBPath, DBPwd, cid, salesmanid, ref errno, ref errstring);
+                //dtSalesmanQuotation = GetQuotationDashboardDT();
+                for (int i=0; i<dtSalesmanQuotation.Rows.Count; i++)
                 {
-                    arr_values[i] = Convert.ToInt32(dtSalesmanQuotation.Rows[i]["Count"]);
+                    arr_values[i] = Convert.ToInt32(dtSalesmanQuotation.Rows[i]["Cnt"]);
                 }
                 //if (dtSalesmanQuotation.Rows.Count > 0)
                 //{
                 //    dtSalesmanQuotation.TableName = "series";
                 //}
-
-                res.respdata = arr_values;
+                var pie = new { series = arr_values };
+                Dictionary<string, object> dic_QtnObject = new Dictionary<string, object>();
+                dic_QtnObject.Add("Count", dtSalesmanQuotation);
+                dic_QtnObject.Add("ChartData", pie);
+                res.respdata = dic_QtnObject;
                 return Request.CreateResponse(HttpStatusCode.OK, res);
             }
             catch (Exception e)

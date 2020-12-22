@@ -283,7 +283,7 @@ Public Class DAL_UserMgt
 
         Try
             BaseConn.Open(_StrDBPath, _StrDBPwd)
-            BaseConn.cmd = New SqlClient.SqlCommand("[GetSalesmanIDByLedgerID]", BaseConn.cnn)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetSalesmanIDByLedgerID]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
             BaseConn.cmd.Parameters.AddWithValue("@CID", cid)
             BaseConn.cmd.Parameters.AddWithValue("@LedgerID", ledgerid)
