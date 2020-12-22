@@ -4668,7 +4668,7 @@ Public Class DAL_General
     Public Function GetCustomer(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As DataTable
         Try
             BaseConn.Open(_StrDBPath, _StrDBPwd)
-            BaseConn.cmd = New SqlClient.SqlCommand("[GetCustomer]", BaseConn.cnn)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetCustomer]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
             BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
             BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
@@ -4682,28 +4682,28 @@ Public Class DAL_General
         Return dt
     End Function
 
-    Public Function GetSalesmanList(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As DataTable
-        Try
-            BaseConn.Open(_StrDBPath, _StrDBPwd)
-            BaseConn.cmd = New SqlClient.SqlCommand("[GetSalesmanList]", BaseConn.cnn)
-            BaseConn.cmd.CommandType = CommandType.StoredProcedure
-            BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
-            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
-            dt = New DataTable
-            BaseConn.da.Fill(dt)
-        Catch ex As Exception
-            MsgBox("Error" & ex.Message)
-        Finally
-            BaseConn.Close()
-        End Try
-        Return dt
-    End Function
+    'Public Function GetSalesmanList(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As DataTable
+    '    Try
+    '        BaseConn.Open(_StrDBPath, _StrDBPwd)
+    '        BaseConn.cmd = New SqlClient.SqlCommand("[GetSalesmanList]", BaseConn.cnn)
+    '        BaseConn.cmd.CommandType = CommandType.StoredProcedure
+    '        BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+    '        BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+    '        dt = New DataTable
+    '        BaseConn.da.Fill(dt)
+    '    Catch ex As Exception
+    '        MsgBox("Error" & ex.Message)
+    '    Finally
+    '        BaseConn.Close()
+    '    End Try
+    '    Return dt
+    'End Function
 
     Public Function GetLatestBusinessPeriodID(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As Integer
         GetLatestBusinessPeriodID = 101
         Try
             BaseConn.Open(_StrDBPath, _StrDBPwd)
-            BaseConn.cmd = New SqlClient.SqlCommand("[GetLatestBusinessPeriodID]", BaseConn.cnn)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetLatestBusinessPeriodID]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
             BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
             BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)

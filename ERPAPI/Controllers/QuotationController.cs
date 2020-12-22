@@ -89,6 +89,102 @@ namespace ERPAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getsalesmanquotation1")]
+        public HttpResponseMessage GetSalesmanQuotation1(int cid, int salesmanid,  string qtnstatus)
+        {
+            ResponseObject res = new ResponseObject();
+            try
+            {
+                int errno = 0;
+                string errstring = string.Empty;
+                DataSet ds = new DataSet();
+                DataTable dtSalesmanQuotation = new DataTable();
+                obj = new DAL_Quotation();
+
+                dtSalesmanQuotation = obj.GetSalesmanQuotation1(DBPath, DBPwd, cid, salesmanid, qtnstatus, ref errno, ref errstring);
+                if (dtSalesmanQuotation.Rows.Count > 0)
+                {
+                    dtSalesmanQuotation.TableName = "SalesmanQuotation";
+                }
+
+                res.respdata = dtSalesmanQuotation;
+                return Request.CreateResponse(HttpStatusCode.OK, res);
+            }
+            catch (Exception e)
+            {
+                res.errno = 1;
+                res.errdesc = e.Message;
+                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
+            }
+        }
+
+        [HttpGet]
+        [Route("getquotationdashboard")]
+        public HttpResponseMessage GetQuotationDashboard(int cid, int salesmanid)
+        {
+            ResponseObject res = new ResponseObject();
+            try
+            {
+                int errno = 0;
+                string errstring = string.Empty;
+                int[] arr_values = new int[4];
+                DataSet ds = new DataSet();
+                DataTable dtSalesmanQuotation = new DataTable();
+                obj = new DAL_Quotation();
+
+                //dtSalesmanQuotation = obj.GetSalesmanQuotation(DBPath, DBPwd, cid, salesmanid, ref errno, ref errstring);
+                dtSalesmanQuotation = GetQuotationDashboardDT();
+                for(int i=0; i<dtSalesmanQuotation.Rows.Count; i++)
+                {
+                    arr_values[i] = Convert.ToInt32(dtSalesmanQuotation.Rows[i]["Count"]);
+                }
+                //if (dtSalesmanQuotation.Rows.Count > 0)
+                //{
+                //    dtSalesmanQuotation.TableName = "series";
+                //}
+
+                res.respdata = arr_values;
+                return Request.CreateResponse(HttpStatusCode.OK, res);
+            }
+            catch (Exception e)
+            {
+                res.errno = 1;
+                res.errdesc = e.Message;
+                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
+            }
+        }
+
+        private DataTable GetQuotationDashboardDT()
+        {
+            DataTable GetQuotationDashboardDT = new DataTable();
+            GetQuotationDashboardDT.Columns.Add("Status");
+            GetQuotationDashboardDT.Columns.Add("Count");
+
+            DataRow drow;
+            drow = GetQuotationDashboardDT.NewRow();
+            drow["Status"] = "Closed";
+            drow["Count"] = 47;
+            GetQuotationDashboardDT.Rows.Add(drow);
+
+            drow = GetQuotationDashboardDT.NewRow();
+            drow["Status"] = "Manually Closed";
+            drow["Count"] = 53;
+            GetQuotationDashboardDT.Rows.Add(drow);
+
+            drow = GetQuotationDashboardDT.NewRow();
+            drow["Status"] = "Open";
+            drow["Count"] = "1364";
+            GetQuotationDashboardDT.Rows.Add(drow);
+
+            drow = GetQuotationDashboardDT.NewRow();
+            drow["Status"] = "Partial";
+            drow["Count"] = 22;
+            GetQuotationDashboardDT.Rows.Add(drow);
+
+            return GetQuotationDashboardDT;
+        }
+
 
         [HttpPost]
         [Route("neworder")]

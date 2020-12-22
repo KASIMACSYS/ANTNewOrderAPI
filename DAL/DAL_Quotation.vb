@@ -23,7 +23,7 @@ Public Class DAL_Quotation
         ErrStr = ""
         Try
             BaseConn.Open(_StrDBPath, _StrDBPwd)
-            BaseConn.cmd = New SqlClient.SqlCommand("[GetQuotationAgainstSalesman]", BaseConn.cnn)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetQuotationAgainstSalesman]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
             BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
             BaseConn.cmd.Parameters.AddWithValue("@SalesmanID", _SalesmanID)
@@ -42,6 +42,32 @@ Public Class DAL_Quotation
         End Try
 
         Return GetSalesmanQuotation
+    End Function
+
+    Public Function GetSalesmanQuotation1(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByVal _CID As Integer, ByVal _SalesmanID As Integer,
+                                       ByVal _Status As String, ByRef iRC As Integer, ByRef ErrStr As String) As DataTable
+        GetSalesmanQuotation1 = New DataTable
+        iRC = 0
+        ErrStr = ""
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetQuotationAgainstSalesman1]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+            BaseConn.cmd.Parameters.AddWithValue("@SalesmanID", _SalesmanID)
+            BaseConn.cmd.Parameters.AddWithValue("@Status", _Status)
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            Dim ds As New DataSet
+            BaseConn.da.Fill(ds)
+            GetSalesmanQuotation1 = ds.Tables(0)
+        Catch ex As Exception
+            iRC = 1
+            ErrStr = ex.Message
+        Finally
+            BaseConn.Close()
+        End Try
+
+        Return GetSalesmanQuotation1
     End Function
 
     Public Sub Get_Structure(ByRef Obj As csQuotation, ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByRef iRC As Integer, ByRef ErrStr As String)

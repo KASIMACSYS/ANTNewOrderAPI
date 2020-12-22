@@ -1,0 +1,16 @@
+select 101, SalesManID, ComboDisplayMember1 from [SalesMan] SM, [BaseDropDownList] BL 
+where SM.CID=101 and BL.CID = 101 and ComboName='PriceList' order by SalesManID
+
+GO
+EXEC sp_rename 'GetQuotationAgainstSalesman1', 'MA_GetQuotationAgainstSalesman1'
+GO
+EXEC sp_rename 'GetQuotationAgainstSalesman', 'MA_GetQuotationAgainstSalesman'
+GO
+EXEC sp_rename 'GetCustomer', 'MA_GetCustomer'
+GO
+EXEC sp_rename 'GetSalesmanIDByLedgerID', 'MA_GetSalesmanIDByLedgerID'
+GO
+EXEC sp_rename 'GetConfigParam', 'MA_GetConfigParam'
+GO
+EXEC sp_rename 'GetLatestBusinessPeriodID', 'MA_GetLatestBusinessPeriodID'
+GO

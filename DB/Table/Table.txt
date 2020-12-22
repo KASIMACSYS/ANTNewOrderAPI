@@ -1,0 +1,12 @@
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SalesManPriceType](
+	[CID] [INT] NULL,
+	[SalesManID] [nvarchar](50) NULL,
+	[PriceType] [nvarchar](10) NULL
+) ON [PRIMARY]
+GO

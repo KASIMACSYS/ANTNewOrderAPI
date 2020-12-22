@@ -1,0 +1,144 @@
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author: <Author,,Name>
+-- Create date: <Create Date,,>
+-- Description: <Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetConfigParam]
+-- Add the parameters for the stored procedure here
+	@CID					INT
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN
+
+	SET NOCOUNT ON;	
+	select tag, value from [configparam];
+END
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetSalesmanIDByLedgerID] 
+	-- Add the parameters for the stored procedure here
+	@CID				INT,
+	@LedgerID			INT,
+	@SalesmanID			INT		OUTPUT
+
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets FROM
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	SELECT @SalesmanID = ISNULL(SalesmanID, 0) FROM [SalesMan] WHERE CID=@CID AND EmployeeLedgerID = @LedgerID;
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[GetCustomer]    Script Date: 12/22/2020 11:30:40 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetCustomer] 
+	-- Add the parameters for the stored procedure here
+	@CID				INT
+
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets FROM
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	SELECT LedgerID AS id, MerchantName AS name FROM [MerchantMaster] WHERE CID=@CID ORDER BY MerchantName;
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[GetQuotationAgainstSalesman1]    Script Date: 12/22/2020 11:31:36 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetQuotationAgainstSalesman1] 
+	-- Add the parameters for the stored procedure here
+	@CID				INT,
+	@SalesmanID			INT,
+	@Status				VARCHAR(20)='ALL'
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets FROM
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	IF @Status = 'ALL'		
+		SELECT		CONVERT(varchar, QtnDate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, QtnStatus AS Status
+		FROM		[QuotationMain] 
+		WHERE		CID = @CID AND SalesManID = @SalesmanID --AND (QtnDate BETWEEN @FromDate AND @ToDate)
+		ORDER BY	CreatedDate
+	ELSE
+		SELECT		CONVERT(varchar, QtnDate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, QtnStatus AS Status
+		FROM		[QuotationMain] 
+		WHERE		CID = @CID AND SalesManID = @SalesmanID AND QtnStatus = @Status --AND (QtnDate BETWEEN @FromDate AND @ToDate) 
+		ORDER BY	CreatedDate
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[GetQuotationAgainstSalesman]    Script Date: 12/22/2020 11:32:13 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetQuotationAgainstSalesman] 
+	-- Add the parameters for the stored procedure here
+	@CID				INT,
+	@SalesmanID			INT,
+	@FromDate			DATE,
+	@ToDate				DATE,
+	@Status				VARCHAR(20)='ALL'
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets FROM
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	IF @Status = 'ALL'		
+		SELECT		CONVERT(varchar, QtnDate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, QtnStatus AS Status
+		FROM		[QuotationMain] 
+		WHERE		CID = @CID AND SalesManID = @SalesmanID --AND (QtnDate BETWEEN @FromDate AND @ToDate)
+		ORDER BY	CreatedDate
+	ELSE
+		SELECT		CONVERT(varchar, QtnDate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, QtnStatus AS Status
+		FROM		[QuotationMain] 
+		WHERE		CID = @CID AND SalesManID = @SalesmanID AND QtnStatus = @Status --AND (QtnDate BETWEEN @FromDate AND @ToDate) 
+		ORDER BY	CreatedDate
+END
+

@@ -263,7 +263,7 @@ Public Class DAL_UserMgt
 
         Try
             BaseConn.Open(_StrDBPath, _StrDBPwd)
-            BaseConn.cmd = New SqlClient.SqlCommand("[GetConfigParam]", BaseConn.cnn)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetConfigParam]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
             BaseConn.cmd.Parameters.AddWithValue("@CID", cid)
             BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
