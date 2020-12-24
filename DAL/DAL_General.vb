@@ -4682,22 +4682,27 @@ Public Class DAL_General
         Return dt
     End Function
 
-    'Public Function GetSalesmanList(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As DataTable
-    '    Try
-    '        BaseConn.Open(_StrDBPath, _StrDBPwd)
-    '        BaseConn.cmd = New SqlClient.SqlCommand("[GetSalesmanList]", BaseConn.cnn)
-    '        BaseConn.cmd.CommandType = CommandType.StoredProcedure
-    '        BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
-    '        BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
-    '        dt = New DataTable
-    '        BaseConn.da.Fill(dt)
-    '    Catch ex As Exception
-    '        MsgBox("Error" & ex.Message)
-    '    Finally
-    '        BaseConn.Close()
-    '    End Try
-    '    Return dt
-    'End Function
+    Public Function MA_ItemPriceList(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer, _ItemCode As String, _SalesmanID As Integer,
+                                     _BarCode As String) As DataSet
+        Dim ds As New DataSet
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_ItemPriceList]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+            BaseConn.cmd.Parameters.AddWithValue("@ItemCode", _ItemCode)
+            BaseConn.cmd.Parameters.AddWithValue("@SalesManID", _SalesmanID)
+            BaseConn.cmd.Parameters.AddWithValue("@BarCode", _BarCode)
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            ds = New DataSet
+            BaseConn.da.Fill(ds)
+        Catch ex As Exception
+            MsgBox("Error" & ex.Message)
+        Finally
+            BaseConn.Close()
+        End Try
+        Return ds
+    End Function
 
     Public Function GetLatestBusinessPeriodID(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As Integer
         GetLatestBusinessPeriodID = 101
@@ -4716,5 +4721,24 @@ Public Class DAL_General
             BaseConn.Close()
         End Try
         Return GetLatestBusinessPeriodID
+    End Function
+
+    Public Function GetItemList(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, _CID As Integer) As DataTable
+        GetItemList = New DataTable
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetItemList]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            dt = New DataTable
+            BaseConn.da.Fill(dt)
+            GetItemList = dt
+        Catch ex As Exception
+            MsgBox("Error" & ex.Message)
+        Finally
+            BaseConn.Close()
+        End Try
+        Return GetItemList
     End Function
 End Class

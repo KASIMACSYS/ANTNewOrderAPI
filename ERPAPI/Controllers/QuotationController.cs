@@ -158,6 +158,57 @@ namespace ERPAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getitempricelist")]
+        public HttpResponseMessage GetItemPriceList(int cid, string itemcode, int salesmanid, string barcode)
+        {
+            ResponseObject res = new ResponseObject();
+            try
+            {
+                //int errno = 0;
+                //string errstring = string.Empty;
+                DataSet ds = new DataSet();
+                objGen = new DAL_General(cid.ToString());
+
+                ds = objGen.MA_ItemPriceList(DBPath, DBPwd, cid, itemcode, salesmanid, barcode);
+                ds.Tables[0].TableName = "ItemMaster";
+                ds.Tables[1].TableName = "ItemPriceList";
+                res.respdata = ds;
+                return Request.CreateResponse(HttpStatusCode.OK, res);
+            }
+            catch (Exception e)
+            {
+                res.errno = 1;
+                res.errdesc = e.Message;
+                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
+            }
+        }
+
+        [HttpGet]
+        [Route("getitemlist")]
+        public HttpResponseMessage GetItemList(int cid)
+        {
+            ResponseObject res = new ResponseObject();
+            try
+            {
+                //int errno = 0;
+                //string errstring = string.Empty;
+                DataTable dt = new DataTable();
+                objGen = new DAL_General(cid.ToString());
+
+                dt = objGen.GetItemList(DBPath, DBPwd, cid);
+                //dt.TableName = "ItemList";
+                res.respdata = dt;
+                return Request.CreateResponse(HttpStatusCode.OK, res);
+            }
+            catch (Exception e)
+            {
+                res.errno = 1;
+                res.errdesc = e.Message;
+                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
+            }
+        }
+
         private DataTable GetQuotationDashboardDT()
         {
             DataTable GetQuotationDashboardDT = new DataTable();

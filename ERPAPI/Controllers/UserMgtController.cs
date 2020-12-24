@@ -70,10 +70,12 @@ namespace WebAPI.Controllers
                         string encrypttoken = JsonConvert.SerializeObject(ht);
                         encrypttoken = objpwd.AES_Encrypt(encrypttoken);
 
-                        DataTable dtConfigParam = new DataTable();
-                        dtConfigParam = obj_UserMgt.GetConfigParam(DBPath, DBPwd, cid);
+                        DataSet dsConfigParam = new DataSet();
+                        dsConfigParam = obj_UserMgt.GetConfigParam(DBPath, DBPwd, cid, Convert.ToInt32(dtUserDetails.Rows[0]["GroupID"]));
+                        dsConfigParam.Tables[0].TableName = "ConfigParam";
+                        dsConfigParam.Tables[1].TableName = "GroupGeneralSetting";
                         int salesmanid = obj_UserMgt.GetSalesmanIDByLedgerID(DBPath, DBPwd, cid, Convert.ToInt32(dtUserDetails.Rows[0]["ledgerid"]));
-                        res.respdata = new User() { userid = Convert.ToInt32(dtUserDetails.Rows[0]["UserID"]), username = username, ledgerid = Convert.ToInt32(dtUserDetails.Rows[0]["ledgerid"]), groupid = Convert.ToInt16(dtUserDetails.Rows[0]["GroupID"]), token = encrypttoken, configparam = dtConfigParam, salesmanid = salesmanid };
+                        res.respdata = new User() { userid = Convert.ToInt32(dtUserDetails.Rows[0]["UserID"]), username = username, ledgerid = Convert.ToInt32(dtUserDetails.Rows[0]["ledgerid"]), groupid = Convert.ToInt16(dtUserDetails.Rows[0]["GroupID"]), token = encrypttoken, configparam = dsConfigParam, salesmanid = salesmanid };
                     }
                     else
                     {
@@ -243,6 +245,24 @@ namespace WebAPI.Controllers
             drow["TYPE"] = "FORM";
             dt.Rows.Add(drow);
 
+            drow = dt.NewRow();
+            drow["FormName"] = "Inventory";
+            drow["MenuID"] = "31";
+            drow["Parent"] = "1";
+            drow["WebIcon"] = "av_timer";
+            drow["parameters"] = "";
+            drow["TYPE"] = "GROUP";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
+            drow["FormName"] = "Price List";
+            drow["MenuID"] = "ERP_291";
+            drow["Parent"] = "31";
+            drow["WebIcon"] = "av_timer";
+            drow["parameters"] = "";
+            drow["TYPE"] = "FORM";
+            dt.Rows.Add(drow);
+
             return dt;
         }
 
@@ -298,6 +318,27 @@ namespace WebAPI.Controllers
             dt.Rows.Add(drow);
             //order list: end
 
+            //new order: PriceList
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_291";
+            drow["Options"] = "Add";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_291";
+            drow["Options"] = "Edit";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_291";
+            drow["Options"] = "Delete";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_291";
+            drow["Options"] = "View";
+            dt.Rows.Add(drow);
+            //new order: end
             return dt;
         }
 

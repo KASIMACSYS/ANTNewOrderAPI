@@ -143,19 +143,59 @@ CREATE PROCEDURE [dbo].[GetQuotationAgainstSalesman]
 END
 
 GO
+/****** Object:  StoredProcedure [dbo].[MA_GetItemList]    Script Date: 12/24/2020 9:51:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[MA_QuotationDashboard]
+-- =============================================
+-- Author: <Author,,Name>
+-- Create date: <Create Date,,>
+-- Description: <Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[MA_GetItemList]
+-- Add the parameters for the stored procedure here
+	@CID			INT		
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN
+
+	SET NOCOUNT ON;
+	select ItemCode as code, Alias1 as [desc] from [ItemMaster] WHERE CID = @CID AND InActive = 0;
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[MA_ItemPriceList]    Script Date: 12/24/2020 11:33:14 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[MA_ItemPriceList]
  -- Add the parameters for the stored procedure here
 	 @CID			INT,
-	 @SalesManID	INT = 0
+	 @ItemCode		VARCHAR(500),
+	 @SalesManID	INT = 0,	 
+	 @BarCode		VARCHAR(100) = ''
  
 --UNLOCK-- WITH ENCRYPTION 
  AS 
  BEGIN  --- load to ItemMCCB
  SET NOCOUNT ON;
  
-	 select QtnStatus, Count(*) Cnt from [quotationMain] where cid = @CID and salesmanID = @SalesManID group by qtnstatus
+	 DECLARE @SQLSTRING NVARCHAR(MAX);
+ 
+	 if(@BarCode!='')
+		 Select @ItemCode = ItemCode from ItemBarCode where CID = @CID AND BarCode = @BarCode;
+
+
+	 Select ItemCode, ItemDesc1 AS Description, Stock, Wac from  ITEMMASTER IM where CID = @CID AND ItemCode=@ItemCode;
+ 
+	 if(@SalesManID=0)
+		Select PriceType, SalesPrice from ITEMPRICE where CID = @CID AND ItemCode=@ItemCode;
+	 else
+	 	 Select ITP.PriceType, SalesPrice from ItemPrice ITP inner join SalesManPriceType SPT on ITP.CID = SPT.CID AND  ITP.PriceType = SPT.PriceType 
+						where ITP.CID = @CID AND ItemCode = @ItemCode and SPT.SalesManID = @SalesManID;
+
+	
+	 --SELECT @BarCode,@ItemCode,@ITEMCODE2,'ITEMMASTER';
 END
