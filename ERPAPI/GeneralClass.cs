@@ -43,7 +43,7 @@ namespace WebAPI
         public int ledgerid { get; set; }
         public int groupid { get; set; }
         public string token { get; set; }
-        public DataTable configparam { get; set; }
+        public DataSet configparam { get; set; }
         public int salesmanid { get; set; }
     }
     

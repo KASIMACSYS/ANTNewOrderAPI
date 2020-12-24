@@ -258,24 +258,25 @@ Public Class DAL_UserMgt
 
     End Sub
 
-    Public Function GetConfigParam(_StrDBPath As String, _StrDBPwd As String, ByVal cid As Integer) As DataTable
-        Dim dtConfigParam As New DataTable
+    Public Function GetConfigParam(_StrDBPath As String, _StrDBPwd As String, ByVal cid As Integer, ByVal groupid As Integer) As DataSet
+        Dim dsConfigParam As New DataSet
 
         Try
             BaseConn.Open(_StrDBPath, _StrDBPwd)
             BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetConfigParam]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
             BaseConn.cmd.Parameters.AddWithValue("@CID", cid)
+            BaseConn.cmd.Parameters.AddWithValue("@GroupID", groupid)
             BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
             'Dim ds As New DataSet
-            BaseConn.da.Fill(dtConfigParam)
+            BaseConn.da.Fill(dsConfigParam)
         Catch ex As Exception
 
         Finally
             BaseConn.Close()
         End Try
 
-        Return dtConfigParam
+        Return dsConfigParam
     End Function
 
     Public Function GetSalesmanIDByLedgerID(_StrDBPath As String, _StrDBPwd As String, ByVal cid As Integer, ByVal ledgerid As Integer) As Integer
