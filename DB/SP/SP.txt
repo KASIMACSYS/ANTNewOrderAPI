@@ -10,13 +10,15 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[GetConfigParam]
 -- Add the parameters for the stored procedure here
-	@CID					INT
+	@CID			INT,
+	@GroupID		INT	
 --UNLOCK-- WITH ENCRYPTION 
  AS 
  BEGIN
 
 	SET NOCOUNT ON;	
 	select tag, value from [configparam];
+	select tag, value from [GroupMgtGeneralSettings] WHERE CID = @CID AND GROUPID = @GroupID;
 END
 
 GO

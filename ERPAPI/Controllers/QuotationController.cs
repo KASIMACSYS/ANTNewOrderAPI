@@ -360,15 +360,15 @@ namespace ERPAPI.Controllers
             objqtn.objQuotationMain.dbl_LCNetAmount = 0;
             objqtn.objQuotationMain.str_TCCurrency = "AED";
             objqtn.objQuotationMain.dbl_ExchangeRate = 1;
-            objqtn.objQuotationMain.str_MiscText = "";
-            objqtn.objQuotationMain.str_DiscText = "";
+            objqtn.objQuotationMain.str_MiscText = "Misc";
+            objqtn.objQuotationMain.str_DiscText = "Discount";
             objqtn.objQuotationMain.int_LanguageCode = 0;
 
 
             objqtn.objQuotationSub.dt_Quotation = DBTemplate();
 
-            objqtn.objQuotationMain.str_ItemTaxCode = "";
-            objqtn.objQuotationMain.str_InvoiceTaxCode = "";
+            objqtn.objQuotationMain.str_ItemTaxCode = "TAX";
+            objqtn.objQuotationMain.str_InvoiceTaxCode = "TAX";
             objqtn.objQuotationMain.str_InvoiceTaxXML = ConvertDatatableToXML(SingleItemTaxDetails());
 
             objqtn.objQuotationMain.dt_TaxItemDetails = TaxItemDetails();
