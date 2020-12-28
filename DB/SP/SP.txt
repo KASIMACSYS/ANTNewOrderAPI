@@ -72,6 +72,8 @@ END
 
 GO
 /****** Object:  StoredProcedure [dbo].[GetQuotationAgainstSalesman1]    Script Date: 12/22/2020 11:31:36 AM ******/
+GO
+/****** Object:  StoredProcedure [dbo].[MA_GetSalesmanOrder]    Script Date: 12/28/2020 9:03:33 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -81,7 +83,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[GetQuotationAgainstSalesman1] 
+CREATE PROCEDURE [dbo].[MA_GetSalesmanOrder] 
 	-- Add the parameters for the stored procedure here
 	@CID				INT,
 	@SalesmanID			INT,
@@ -94,14 +96,14 @@ CREATE PROCEDURE [dbo].[GetQuotationAgainstSalesman1]
 	SET NOCOUNT ON;
 	
 	IF @Status = 'ALL'		
-		SELECT		CONVERT(varchar, QtnDate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, QtnStatus AS Status
-		FROM		[QuotationMain] 
+		SELECT		CONVERT(varchar, SODate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, SOStatus AS Status
+		FROM		[SalesOrderMain] 
 		WHERE		CID = @CID AND SalesManID = @SalesmanID --AND (QtnDate BETWEEN @FromDate AND @ToDate)
 		ORDER BY	CreatedDate
 	ELSE
-		SELECT		CONVERT(varchar, QtnDate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, QtnStatus AS Status
-		FROM		[QuotationMain] 
-		WHERE		CID = @CID AND SalesManID = @SalesmanID AND QtnStatus = @Status --AND (QtnDate BETWEEN @FromDate AND @ToDate) 
+		SELECT		CONVERT(varchar, SODate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, SOStatus AS Status
+		FROM		[SalesOrderMain] 
+		WHERE		CID = @CID AND SalesManID = @SalesmanID AND SOStatus = @Status --AND (QtnDate BETWEEN @FromDate AND @ToDate) 
 		ORDER BY	CreatedDate
 END
 
@@ -198,4 +200,37 @@ CREATE PROCEDURE [dbo].[MA_ItemPriceList]
 
 	
 	 --SELECT @BarCode,@ItemCode,@ITEMCODE2,'ITEMMASTER';
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[MA_OrderDashboard]    Script Date: 12/28/2020 9:07:26 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[MA_OrderDashboard]
+ -- Add the parameters for the stored procedure here
+	 @CID			INT,
+	 @SalesManID	INT = 0
+ 
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN  --- load to ItemMCCB
+ SET NOCOUNT ON;
+ 
+	 select SOStatus, Count(*) Cnt from [SalesOrderMain] where cid = @CID and salesmanID = @SalesManID group by SOStatus;
+
+	SELECT convert(char(6), SODate, 112) AS Month,
+			COUNT (CASE WHEN SOStatus = 'Open' THEN 1 END) AS [Open],
+			COUNT (CASE WHEN SOStatus = 'Close' THEN 1 END) AS [Close],
+			COUNT (CASE WHEN SOStatus = 'Partial' THEN 1 END) AS [Partial],
+			COUNT (CASE WHEN SOStatus = 'Manually Closed' THEN 1 END) AS [ManualClose]
+	 FROM   [SalesOrderMain]
+	 WHERE  CID = @CID and SalesManID = @SalesManID and datediff (MONTH, SODate, sysdatetime()) < 4
+	 GROUP  BY convert(char(6), SODate, 112)
+	 ORDER  BY Month DESC
+
+	 --select FORMAT(QtnDate, 'MMM') as [Month], [Open], [Partial], [Closed] from [SalesOrderMain] 
+		--pivot (Count(QtnStatus) for QtnStatus in ([Open], [Partial], [Closed])) as pivottable
+	 --where CID = @CID and SalesManID = @SalesManID and QtnDate >= DATEADD(mm,-3,getdate()) --order by QtnDate
 END

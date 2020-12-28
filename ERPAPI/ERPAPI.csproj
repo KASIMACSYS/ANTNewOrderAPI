@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\QuotationController.cs" />
+    <Compile Include="Controllers\SalesOrderController.cs" />
     <Compile Include="Controllers\UserMgtController.cs" />
     <Compile Include="GeneralClass.cs" />
     <Compile Include="Generic.cs" />
