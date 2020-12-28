@@ -257,4 +257,55 @@ Public Class DAL_SalesOrder
         Update_SalesOrder = _ErrString
         Return Update_SalesOrder
     End Function
+
+    Public Function GetSalesmanOrder(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByVal _CID As Integer, ByVal _SalesmanID As Integer,
+                                       ByVal _Status As String, ByRef iRC As Integer, ByRef ErrStr As String) As DataTable
+        GetSalesmanOrder = New DataTable
+        iRC = 0
+        ErrStr = ""
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_GetSalesmanOrder]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+            BaseConn.cmd.Parameters.AddWithValue("@SalesmanID", _SalesmanID)
+            BaseConn.cmd.Parameters.AddWithValue("@Status", _Status)
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            Dim ds As New DataSet
+            BaseConn.da.Fill(ds)
+            GetSalesmanOrder = ds.Tables(0)
+        Catch ex As Exception
+            iRC = 1
+            ErrStr = ex.Message
+        Finally
+            BaseConn.Close()
+        End Try
+
+        Return GetSalesmanOrder
+    End Function
+
+    Public Function MA_OrderDashboard(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByVal _CID As Integer, ByVal _SalesmanID As Integer, ByRef iRC As Integer, ByRef ErrStr As String) As DataSet
+        'MA_QuotationDashboard = New DataSet
+        Dim ds As New DataSet
+
+        iRC = 0
+        ErrStr = ""
+        Try
+            BaseConn.Open(_StrDBPath, _StrDBPwd)
+            BaseConn.cmd = New SqlClient.SqlCommand("[MA_OrderDashboard]", BaseConn.cnn)
+            BaseConn.cmd.CommandType = CommandType.StoredProcedure
+            BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+            BaseConn.cmd.Parameters.AddWithValue("@SalesmanID", _SalesmanID)
+            BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
+            BaseConn.da.Fill(ds)
+            'MA_QuotationDashboard = ds.Tables(0)
+        Catch ex As Exception
+            iRC = 1
+            ErrStr = ex.Message
+        Finally
+            BaseConn.Close()
+        End Try
+
+        Return ds
+    End Function
 End Class

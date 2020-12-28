@@ -14,3 +14,10 @@ EXEC sp_rename 'GetConfigParam', 'MA_GetConfigParam'
 GO
 EXEC sp_rename 'GetLatestBusinessPeriodID', 'MA_GetLatestBusinessPeriodID'
 GO
+
+============================= 2020-12-28 ============================
+GO
+EXEC sp_rename 'MA_GetQuotationAgainstSalesman1','MA_GetSalesmanOrder';
+GO
+EXEC sp_rename 'MA_QuotationDashboard','MA_OrderDashboard';
+GO
