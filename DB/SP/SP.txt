@@ -8,7 +8,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description: <Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[GetConfigParam]
+CREATE PROCEDURE [dbo].[MA_GetConfigParam]
 -- Add the parameters for the stored procedure here
 	@CID			INT,
 	@GroupID		INT	
@@ -31,7 +31,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[GetSalesmanIDByLedgerID] 
+CREATE PROCEDURE [dbo].[MA_GetSalesmanIDByLedgerID] 
 	-- Add the parameters for the stored procedure here
 	@CID				INT,
 	@LedgerID			INT,
@@ -58,7 +58,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[GetCustomer] 
+CREATE PROCEDURE [dbo].[MA_GetCustomer] 
 	-- Add the parameters for the stored procedure here
 	@CID				INT
 
@@ -120,7 +120,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[GetQuotationAgainstSalesman] 
+CREATE PROCEDURE [dbo].[MA_GetQuotationAgainstSalesman] 
 	-- Add the parameters for the stored procedure here
 	@CID				INT,
 	@SalesmanID			INT,
