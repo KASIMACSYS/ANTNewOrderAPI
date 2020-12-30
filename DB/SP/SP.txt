@@ -114,7 +114,7 @@ CREATE PROCEDURE [dbo].[MA_GetSalesmanOrder]
 	-- Add the parameters for the stored procedure here
 	@CID				INT,
 	@SalesmanID			INT,
-	@Status				VARCHAR(20)='ALL'
+	@Status				VARCHAR(20)='Open'
 --UNLOCK-- WITH ENCRYPTION 
  AS 
  BEGIN
@@ -123,12 +123,12 @@ CREATE PROCEDURE [dbo].[MA_GetSalesmanOrder]
 	SET NOCOUNT ON;
 	
 	IF @Status = 'ALL'		
-		SELECT		CONVERT(varchar, SODate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, SOStatus AS Status
+		SELECT		CONVERT(varchar, SODate, 23) AS OrderDate, Alias AS Name, LedgerID, SalOrd as OrderNo, SOStatus AS Status
 		FROM		[SalesOrderMain] 
 		WHERE		CID = @CID AND SalesManID = @SalesmanID --AND (QtnDate BETWEEN @FromDate AND @ToDate)
 		ORDER BY	CreatedDate
 	ELSE
-		SELECT		CONVERT(varchar, SODate, 23) AS QtnDate, Alias AS Name, LedgerID, QtnNo, SOStatus AS Status
+		SELECT		CONVERT(varchar, SODate, 23) AS OrderDate, Alias AS Name, LedgerID, SalOrd as OrderNo, SOStatus AS Status
 		FROM		[SalesOrderMain] 
 		WHERE		CID = @CID AND SalesManID = @SalesmanID AND SOStatus = @Status --AND (QtnDate BETWEEN @FromDate AND @ToDate) 
 		ORDER BY	CreatedDate
