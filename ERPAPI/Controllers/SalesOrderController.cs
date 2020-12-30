@@ -287,24 +287,7 @@ namespace ERPAPI.Controllers
             Stream fs = postedfile.InputStream;
             BinaryReader br = new BinaryReader(fs);
             byte[] bytes = br.ReadBytes((Int32)fs.Length);
-
-            var jpegQuality = 50;
-            Image image;
-            using (var inputStream = new MemoryStream(bytes))
-            {
-                image = Image.FromStream(inputStream);
-                var jpegEncoder = ImageCodecInfo.GetImageDecoders()
-                  .First(c => c.FormatID == ImageFormat.Jpeg.Guid);
-                var encoderParameters = new EncoderParameters(1);
-                encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, jpegQuality);
-                Byte[] outputBytes;
-                using (var outputStream = new MemoryStream())
-                {
-                    image.Save(outputStream, jpegEncoder, encoderParameters);
-                    outputBytes = outputStream.ToArray();
-                }
-            }
-
+                        
             string result = createSalesOrder(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), username, bytes, imageCaption, imagetype);
             return Request.CreateResponse(HttpStatusCode.Created);
         }
@@ -330,6 +313,7 @@ namespace ERPAPI.Controllers
                 {
                     var postedFile = httpRequest.Files[file];
                     var filePath1 = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath1);
 
                     Stream strm = postedFile.InputStream;
 
@@ -349,12 +333,54 @@ namespace ERPAPI.Controllers
 
                     else
                     {
-                        imageArray = Compressimage(strm, fileExtension);// filePath1);//, postedFile.FileName);
+                        //imageArray = Compressimage(strm, fileExtension);// filePath1);//, postedFile.FileName);
+                        BinaryReader br = new BinaryReader(strm);
+                        imageArray = br.ReadBytes((Int32)strm.Length);
                         docfiles.Add(imageCaption);
                     }
                         
 
                     UpdateImage("101", "PER/" + SONo, imageArray, imageCaption, Path.GetExtension(imageCaption), username);
+                }
+                response = Request.CreateResponse(HttpStatusCode.Created, docfiles);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            return response;
+        }
+
+        [HttpPost]
+        [Route("testorder")]
+        public HttpResponseMessage TestOrder()
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            var httpRequest = HttpContext.Current.Request;
+
+            string customername = httpRequest["CustomerName"];
+
+            if (httpRequest.Files.Count > 0)
+            {
+                var docfiles = new List<string>();
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath1 = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath1);
+
+                    Stream strm = postedFile.InputStream;
+
+                    string imageCaption = postedFile.FileName; //httpRequest["ImageCaption"];
+                    string fileExtension = Path.GetExtension(imageCaption); //(filePath1);
+
+                    byte[] imageArray;
+                    //imageArray = Compressimage(strm, fileExtension);// filePath1);//, postedFile.FileName);
+                    BinaryReader br = new BinaryReader(strm);
+                    imageArray = br.ReadBytes((Int32)strm.Length);
+                    docfiles.Add(imageCaption);
+
+                    UpdateImage("101", "PER/" + 10101, imageArray, imageCaption, Path.GetExtension(imageCaption), customername);
                 }
                 response = Request.CreateResponse(HttpStatusCode.Created, docfiles);
             }
