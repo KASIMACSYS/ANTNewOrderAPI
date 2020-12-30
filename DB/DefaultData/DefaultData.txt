@@ -1,3 +1,4 @@
+--Insert into [SalesManPriceType]
 select 101, SalesManID, ComboDisplayMember1 from [SalesMan] SM, [BaseDropDownList] BL 
 where SM.CID=101 and BL.CID = 101 and ComboName='PriceList' order by SalesManID
 

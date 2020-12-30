@@ -1,3 +1,28 @@
+GO
+/****** Object:  StoredProcedure [dbo].[MA_GetLatestBusinessPeriodID]    Script Date: 12/28/2020 3:26:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[MA_GetLatestBusinessPeriodID] 
+	-- Add the parameters for the stored procedure here
+	@CID				INT
+
+--UNLOCK-- WITH ENCRYPTION 
+ AS 
+ BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets FROM
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	SELECT Top 1 BusinessPeriodID FROM [BusinessPeriodMaster] WHERE CID=@CID ORDER BY BusinessPeriodID DESC;
+END
+GO
 
 SET ANSI_NULLS ON
 GO

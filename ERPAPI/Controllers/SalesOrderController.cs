@@ -11,6 +11,9 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using WebAPI;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace ERPAPI.Controllers
 {
@@ -272,6 +275,9 @@ namespace ERPAPI.Controllers
             imagename = new string(Path.GetFileNameWithoutExtension(postedfile.FileName).Take(10).ToArray()).Replace(" ", "-");
             imagename = imagename + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(postedfile.FileName);
 
+            //var filepath = HttpContext.Current.Server.MapPath("~/Image/" + imagename);
+            //postedfile.SaveAs(filepath);
+
             string imageCaption = httprequest["ImageCaption"];
             string customerledger = httprequest["CustomerLedger"];
             string customername = httprequest["CustomerName"];
@@ -281,8 +287,82 @@ namespace ERPAPI.Controllers
             Stream fs = postedfile.InputStream;
             BinaryReader br = new BinaryReader(fs);
             byte[] bytes = br.ReadBytes((Int32)fs.Length);
+
+            var jpegQuality = 50;
+            Image image;
+            using (var inputStream = new MemoryStream(bytes))
+            {
+                image = Image.FromStream(inputStream);
+                var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                  .First(c => c.FormatID == ImageFormat.Jpeg.Guid);
+                var encoderParameters = new EncoderParameters(1);
+                encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, jpegQuality);
+                Byte[] outputBytes;
+                using (var outputStream = new MemoryStream())
+                {
+                    image.Save(outputStream, jpegEncoder, encoderParameters);
+                    outputBytes = outputStream.ToArray();
+                }
+            }
+
             string result = createSalesOrder(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), username, bytes, imageCaption, imagetype);
             return Request.CreateResponse(HttpStatusCode.Created);
+        }
+
+        [HttpPost]
+        [Route("salesmanorder")]
+        public HttpResponseMessage Post()
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            var httpRequest = HttpContext.Current.Request;
+
+            string customerledger = httpRequest["CustomerLedger"];
+            string customername = httpRequest["CustomerName"];
+            string salesmanid = httpRequest["SalesmanID"];
+            string username = httpRequest["UserName"];
+
+            string SONo = newSalesOrder(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), username);
+
+            if (httpRequest.Files.Count > 0)
+            {
+                var docfiles = new List<string>();
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath1 = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
+
+                    Stream strm = postedFile.InputStream;
+
+                    string imageCaption = postedFile.FileName; //httpRequest["ImageCaption"];
+                    string fileExtension = Path.GetExtension(imageCaption); //(filePath1);
+
+                    byte[] imageArray;
+                    if (fileExtension == ".pdf")
+                    {
+                        imageArray = File.ReadAllBytes(filePath1);
+                        //using (var ms = new MemoryStream())
+                        //{
+                        //    postedFile.CopyTo(ms);
+                        //    docAsBytes = ms.ToArray();
+                        //}
+                    }
+
+                    else
+                    {
+                        imageArray = Compressimage(strm, fileExtension);// filePath1);//, postedFile.FileName);
+                        docfiles.Add(imageCaption);
+                    }
+                        
+
+                    UpdateImage("101", "PER/" + SONo, imageArray, imageCaption, Path.GetExtension(imageCaption), username);
+                }
+                response = Request.CreateResponse(HttpStatusCode.Created, docfiles);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            return response;
         }
 
         private string createSalesOrder(int customerledger, string customername, int salesmanid, string username, Byte[] image, string imagename, string imagetype)
@@ -302,6 +382,22 @@ namespace ERPAPI.Controllers
 
             return soNo;
         }
+
+        private string newSalesOrder(int customerledger, string customername, int salesmanid, string username)
+        {
+            string soNo = string.Empty;
+            string outsms = string.Empty, outemail = string.Empty;
+            string errstring = string.Empty;
+            int revno = 0;
+            int errno = 0;
+            obj = new DAL_SalesOrder();
+            csSalesOrder objcsSO = CreateSOObject(customerledger, customername, salesmanid, username);
+
+            errstring = obj.Update_SalesOrder(DBPath, DBPwd, ref soNo, ref revno, objcsSO, ref outsms, ref outemail, ref errno);
+            
+            return soNo;
+        }
+
 
         private csSalesOrder CreateSOObject(int customerledger, string customername, int salesmanid, string username)
         {
@@ -567,5 +663,129 @@ namespace ERPAPI.Controllers
 
         }
 
+       
+
+        public static byte[] Compressimage(Stream sourcePath, string extension)// string targetPath)//, String filename)
+        {
+            byte[] results = new byte[100];
+            //string extension = Path.GetExtension(fileName);
+            try
+            {
+                  using (var image = Image.FromStream(sourcePath))
+                    {
+                        float maxHeight = 900.0f;
+                        float maxWidth = 900.0f;
+                        int newWidth;
+                        int newHeight;
+                        //string extension;
+                        Bitmap originalBMP = new Bitmap(sourcePath);
+                        int originalWidth = originalBMP.Width;
+                        int originalHeight = originalBMP.Height;
+
+                        if (originalWidth > maxWidth || originalHeight > maxHeight)
+                        {
+
+                            // To preserve the aspect ratio  
+                            float ratioX = (float)maxWidth / (float)originalWidth;
+                            float ratioY = (float)maxHeight / (float)originalHeight;
+                            float ratio = Math.Min(ratioX, ratioY);
+                            newWidth = (int)(originalWidth * ratio);
+                            newHeight = (int)(originalHeight * ratio);
+                        }
+                        else
+                        {
+                            newWidth = (int)originalWidth;
+                            newHeight = (int)originalHeight;
+
+                        }
+                        Bitmap bitMAP1 = new Bitmap(originalBMP, newWidth, newHeight);
+                        Graphics imgGraph = Graphics.FromImage(bitMAP1);
+                        //extension = Path.GetExtension(targetPath);
+                        if (extension == ".png" || extension == ".gif")
+                        {
+                            imgGraph.SmoothingMode = SmoothingMode.AntiAlias;
+                            imgGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            imgGraph.DrawImage(originalBMP, 0, 0, newWidth, newHeight);
+
+
+                            //bitMAP1.Save(targetPath, image.RawFormat);
+
+                            bitMAP1.Dispose();
+                            imgGraph.Dispose();
+                            originalBMP.Dispose();
+                        }
+                        else if (extension == ".jpg")
+                        {
+
+                            imgGraph.SmoothingMode = SmoothingMode.AntiAlias;
+                            imgGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            imgGraph.DrawImage(originalBMP, 0, 0, newWidth, newHeight);
+
+                            using (MemoryStream ms = new MemoryStream())
+                            {
+                                ImageCodecInfo codec = ImageCodecInfo.GetImageEncoders().FirstOrDefault(c => c.FormatID == ImageFormat.Jpeg.Guid);
+                                EncoderParameters jpegParms = new EncoderParameters(1);
+                                jpegParms.Param[0] = new EncoderParameter(Encoder.Quality, 95L);
+                                bitMAP1.Save(ms, codec, jpegParms);
+                                results = ms.ToArray();
+                            }
+
+
+                            //ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+                            //Encoder myEncoder = Encoder.Quality;
+                            //EncoderParameters myEncoderParameters = new EncoderParameters(1);
+                            //EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
+                            //myEncoderParameters.Param[0] = myEncoderParameter;
+                            //bitMAP1.Save(targetPath, jpgEncoder, myEncoderParameters);
+
+                            bitMAP1.Dispose();
+                            imgGraph.Dispose();
+                            originalBMP.Dispose();
+
+                        }
+                        //else if (extension == ".jpg")
+                        //{
+
+                        //    imgGraph.SmoothingMode = SmoothingMode.AntiAlias;
+                        //    imgGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        //    imgGraph.DrawImage(originalBMP, 0, 0, newWidth, newHeight);
+                        //    ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+                        //    Encoder myEncoder = Encoder.Quality;
+                        //    EncoderParameters myEncoderParameters = new EncoderParameters(1);
+                        //    EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
+                        //    myEncoderParameters.Param[0] = myEncoderParameter;
+                        //    bitMAP1.Save(targetPath, jpgEncoder, myEncoderParameters);
+
+                        //    bitMAP1.Dispose();
+                        //    imgGraph.Dispose();
+                        //    originalBMP.Dispose();
+
+                        //}
+
+
+                    }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return results;
+        }
+
+        public static ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
+        }
     }
 }
