@@ -12,7 +12,8 @@ namespace ERPAPI
         {
             //Make a call to the database to get allowed origins and convert to a comma separated string
             //return "http://www.example.com,http://localhost:59452,http://localhost:25495";
-            return "http://localhost,http://192.168.1.2,http://localhost:4200";
+            //return "http://localhost,http://192.168.1.2,http://localhost:4200";
+            return "*";
         }
 
         public static void Register(HttpConfiguration config)
