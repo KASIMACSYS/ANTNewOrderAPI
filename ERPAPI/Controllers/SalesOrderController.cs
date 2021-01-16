@@ -20,15 +20,18 @@ namespace ERPAPI.Controllers
     [RoutePrefix("api/salesorder")]
     public class SalesOrderController : ApiController
     {
+        int CID = Convert.ToInt16(ConfigurationManager.AppSettings["CID"]);
         String DBPath = ConfigurationManager.AppSettings["DBPath"].ToString();
         String DBPwd = ConfigurationManager.AppSettings["DBPwd"].ToString();
         DAL_SalesOrder obj;
         DAL_General objGen;
+        int BusinessPeriodID = 101;
 
         [HttpGet]
         [Route("getcustomersalesman")]
         public HttpResponseMessage CustomerAndSalesman(int cid)
         {
+            cid = CID;
             ResponseObject res = new ResponseObject();
             try
             {
@@ -53,41 +56,12 @@ namespace ERPAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
             }
         }
-               
-        //[HttpGet]
-        //[Route("getsalesmanquotation")]
-        //public HttpResponseMessage GetSalesmanQuotation(int cid, int salesmanid, DateTime fromdate, DateTime todate, string qtnstatus)
-        //{
-        //    ResponseObject res = new ResponseObject();
-        //    try
-        //    {
-        //        int errno = 0;
-        //        string errstring = string.Empty;
-        //        DataSet ds = new DataSet();
-        //        DataTable dtSalesmanQuotation = new DataTable();
-        //        obj = new DAL_Quotation();
-
-        //        dtSalesmanQuotation = obj.GetSalesmanQuotation(DBPath, DBPwd, cid, salesmanid, fromdate, todate, qtnstatus, ref errno, ref errstring);
-        //        if (dtSalesmanQuotation.Rows.Count > 0)
-        //        {
-        //            dtSalesmanQuotation.TableName = "SalesmanQuotation";
-        //        }
-
-        //        res.respdata = dtSalesmanQuotation;
-        //        return Request.CreateResponse(HttpStatusCode.OK, res);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        res.errno = 1;
-        //        res.errdesc = e.Message;
-        //        return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
-        //    }
-        //}
-
+           
         [HttpGet]
         [Route("getsalesmanorder")]
         public HttpResponseMessage GetSalesmanOrder(int cid, int salesmanid, string qtnstatus)
         {
+            cid = CID;
             ResponseObject res = new ResponseObject();
             try
             {
@@ -118,6 +92,7 @@ namespace ERPAPI.Controllers
         [Route("getorderdashboard")]
         public HttpResponseMessage GetQuotationDashboard(int cid, int salesmanid)
         {
+            cid = CID;
             ResponseObject res = new ResponseObject();
             try
             {
@@ -180,6 +155,7 @@ namespace ERPAPI.Controllers
         [Route("getitempricelist")]
         public HttpResponseMessage GetItemPriceList(int cid, string itemcode, int salesmanid, string barcode)
         {
+            cid = CID;
             ResponseObject res = new ResponseObject();
             try
             {
@@ -206,6 +182,7 @@ namespace ERPAPI.Controllers
         [Route("getitemlist")]
         public HttpResponseMessage GetItemList(int cid)
         {
+            cid = CID;
             ResponseObject res = new ResponseObject();
             try
             {
@@ -261,36 +238,36 @@ namespace ERPAPI.Controllers
         }
 
 
-        [HttpPost]
-        [Route("neworder")]
-        public HttpResponseMessage NewOrder()
-        {
-            string imagename = null;
-            string imagetype = null;
-            var httprequest = HttpContext.Current.Request;
+        //[HttpPost]
+        //[Route("neworder")]
+        //public HttpResponseMessage NewOrder()
+        //{
+        //    string imagename = null;
+        //    string imagetype = null;
+        //    var httprequest = HttpContext.Current.Request;
 
-            //upload image
-            var postedfile = httprequest.Files["Image"];
-            //create custom filename
-            imagename = new string(Path.GetFileNameWithoutExtension(postedfile.FileName).Take(10).ToArray()).Replace(" ", "-");
-            imagename = imagename + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(postedfile.FileName);
+        //    //upload image
+        //    var postedfile = httprequest.Files["Image"];
+        //    //create custom filename
+        //    imagename = new string(Path.GetFileNameWithoutExtension(postedfile.FileName).Take(10).ToArray()).Replace(" ", "-");
+        //    imagename = imagename + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(postedfile.FileName);
 
-            //var filepath = HttpContext.Current.Server.MapPath("~/Image/" + imagename);
-            //postedfile.SaveAs(filepath);
+        //    //var filepath = HttpContext.Current.Server.MapPath("~/Image/" + imagename);
+        //    //postedfile.SaveAs(filepath);
 
-            string imageCaption = httprequest["ImageCaption"];
-            string customerledger = httprequest["CustomerLedger"];
-            string customername = httprequest["CustomerName"];
-            string salesmanid = httprequest["SalesmanID"];
-            string username = httprequest["UserName"];
+        //    string imageCaption = httprequest["ImageCaption"];
+        //    string customerledger = httprequest["CustomerLedger"];
+        //    string customername = httprequest["CustomerName"];
+        //    string salesmanid = httprequest["SalesmanID"];
+        //    string username = httprequest["UserName"];
 
-            Stream fs = postedfile.InputStream;
-            BinaryReader br = new BinaryReader(fs);
-            byte[] bytes = br.ReadBytes((Int32)fs.Length);
+        //    Stream fs = postedfile.InputStream;
+        //    BinaryReader br = new BinaryReader(fs);
+        //    byte[] bytes = br.ReadBytes((Int32)fs.Length);
                         
-            string result = createSalesOrder(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), username, bytes, imageCaption, imagetype);
-            return Request.CreateResponse(HttpStatusCode.Created);
-        }
+        //    string result = createSalesOrder(Convert.ToInt16(customerledger), customername, Convert.ToInt32(salesmanid), username, bytes, imageCaption, imagetype);
+        //    return Request.CreateResponse(HttpStatusCode.Created);
+        //}
 
         [HttpPost]
         [Route("salesmanorder")]
@@ -324,23 +301,17 @@ namespace ERPAPI.Controllers
                     if (fileExtension == ".pdf")
                     {
                         imageArray = File.ReadAllBytes(filePath1);
-                        //using (var ms = new MemoryStream())
-                        //{
-                        //    postedFile.CopyTo(ms);
-                        //    docAsBytes = ms.ToArray();
-                        //}
                     }
 
                     else
                     {
-                        //imageArray = Compressimage(strm, fileExtension);// filePath1);//, postedFile.FileName);
                         BinaryReader br = new BinaryReader(strm);
                         imageArray = br.ReadBytes((Int32)strm.Length);
                         docfiles.Add(imageCaption);
                     }
                         
 
-                    UpdateImage("101", "PER/" + SONo, imageArray, imageCaption, Path.GetExtension(imageCaption), username);
+                    UpdateImage(CID.ToString(), "PER/" + SONo, imageArray, imageCaption, Path.GetExtension(imageCaption), username);
                 }
                 response = Request.CreateResponse(HttpStatusCode.Created, docfiles);
             }
@@ -351,46 +322,7 @@ namespace ERPAPI.Controllers
             return response;
         }
 
-        [HttpPost]
-        [Route("testorder")]
-        public HttpResponseMessage TestOrder()
-        {
-            HttpResponseMessage response = new HttpResponseMessage();
-            var httpRequest = HttpContext.Current.Request;
-
-            string customername = httpRequest["CustomerName"];
-
-            if (httpRequest.Files.Count > 0)
-            {
-                var docfiles = new List<string>();
-                foreach (string file in httpRequest.Files)
-                {
-                    var postedFile = httpRequest.Files[file];
-                    var filePath1 = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
-                    postedFile.SaveAs(filePath1);
-
-                    Stream strm = postedFile.InputStream;
-
-                    string imageCaption = postedFile.FileName; //httpRequest["ImageCaption"];
-                    string fileExtension = Path.GetExtension(imageCaption); //(filePath1);
-
-                    byte[] imageArray;
-                    //imageArray = Compressimage(strm, fileExtension);// filePath1);//, postedFile.FileName);
-                    BinaryReader br = new BinaryReader(strm);
-                    imageArray = br.ReadBytes((Int32)strm.Length);
-                    docfiles.Add(imageCaption);
-
-                    UpdateImage("101", "PER/" + 10101, imageArray, imageCaption, Path.GetExtension(imageCaption), customername);
-                }
-                response = Request.CreateResponse(HttpStatusCode.Created, docfiles);
-            }
-            else
-            {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-            return response;
-        }
-
+       
         private string createSalesOrder(int customerledger, string customername, int salesmanid, string username, Byte[] image, string imagename, string imagetype)
         {
             string soNo = string.Empty;
@@ -418,7 +350,7 @@ namespace ERPAPI.Controllers
             int errno = 0;
             obj = new DAL_SalesOrder();
             csSalesOrder objcsSO = CreateSOObject(customerledger, customername, salesmanid, username);
-
+            BusinessPeriodID = objcsSO.objSalesOrderMain.int_BusinessPeriodID;
             errstring = obj.Update_SalesOrder(DBPath, DBPwd, ref soNo, ref revno, objcsSO, ref outsms, ref outemail, ref errno);
             
             return soNo;
@@ -430,10 +362,10 @@ namespace ERPAPI.Controllers
             Dictionary<string, string> objproj = new Dictionary<string, string>();
 
             csSalesOrder objSO = new csSalesOrder(objproj);
-            objSO.int_CID = 101;
+            objSO.int_CID = CID;
             objGen = new DAL_General(objSO.int_CID.ToString());
             objSO.objSalesOrderMain.str_SalOrd = "";
-            objSO.objSalesOrderMain.int_BusinessPeriodID = objGen.GetLatestBusinessPeriodID(DBPath, DBPwd, 101);
+            objSO.objSalesOrderMain.int_BusinessPeriodID = objGen.GetLatestBusinessPeriodID(DBPath, DBPwd, CID);
             objSO.objSalesOrderMain.str_Flag = "ADD";
             objSO.objSalesOrderMain.str_FormPrefix = "PER/";
             objSO.objSalesOrderMain.str_MenuID = "ERP_156";
@@ -684,7 +616,7 @@ namespace ERPAPI.Controllers
             DateTime updateddate = DateTime.Now;
             string slno = "1";
             DAL_General obj = new DAL_General(cid);
-            obj.FileUpload(cid, DBPath, DBPwd, 101, qtnno, "SalesOrder", "ERP_156", "", "", imagename, ".jpg", updatedby, image, ref slno, "ADD", ref errno, ref errstring);
+            obj.FileUpload(cid, DBPath, DBPwd, BusinessPeriodID, qtnno, "SalesOrder", "ERP_156", "", "", imagename, ".jpg", updatedby, image, ref slno, "ADD", ref errno, ref errstring);
             //errstring = obj.FileUpload(cid, qtnno, "Quotation", "ERP_155", "ORDER", "", imagename, imagetype, updatedby, image, "1", "ADD", ref errno, ref errstring);
 
         }

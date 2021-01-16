@@ -22,6 +22,7 @@ namespace WebAPI.Controllers
     [RoutePrefix("api/usermgt")]
     public class UserMgtController : ApiController
     {
+        int CID = Convert.ToInt16(ConfigurationManager.AppSettings["CID"]);
         String DBPath = ConfigurationManager.AppSettings["DBPath"].ToString();
         String DBPwd = ConfigurationManager.AppSettings["DBPwd"].ToString();
 
@@ -43,7 +44,7 @@ namespace WebAPI.Controllers
 
                 DAL_UserMgt obj_UserMgt = new DAL_UserMgt();
                 DataTable dtUserDetails = new DataTable();
-                int cid = obj.int_SiteID;
+                int cid = CID;  //obj.int_SiteID;
                 string username = obj.str_UserName;
                 string ADDomain = string.Empty;
                 bool ADLogin = false;
@@ -106,7 +107,7 @@ namespace WebAPI.Controllers
         [Route("buildsidemenu")]
         public HttpResponseMessage GetBuildSideMenu(int cid, int uniqid, int groupid, string flag)
         {
-
+            cid = CID;
             DataTable dtGroupMgtSub = new DataTable();
             DAL_UserMgt objGrpMgt = new DAL_UserMgt();
 
@@ -352,45 +353,6 @@ namespace WebAPI.Controllers
                 enableParentNode(ParentMenuObject, ref objdict);
             }
         }
-
-        //Get All Groups/Languages/Other company access details by passing the company id    
-
-        //[HttpGet]
-        //[Route("loaddetails")]
-        //public HttpResponseMessage LoadDetails(int cid, string tablename, string type, string condition, string menuid, [Optional] bool withinactive)
-        //{
-
-        //    type = string.IsNullOrEmpty(type) ? "" : "";
-        //    ResponseObject res = new ResponseObject();
-        //    try
-        //    {
-        //        DataSet ds;
-        //        DAL_UserMgt obj = new DAL_UserMgt();
-        //        ds = obj.getDataSourceForUserMgt(cid);
-        //        if (ds.Tables.Count > 0)
-        //        {
-        //            ds.Tables[0].TableName = "groups";
-        //            ds.Tables[1].TableName = "languages";
-        //            ds.Tables[2].TableName = "companies";
-
-        //            DAL_General objGen = new DAL_General();
-        //            DataTable dt_employees = new DataTable();
-        //            dt_employees = objGen.LoadMCCBWithLedger(new Tuple<int, string>(cid, tablename), type, condition, menuid, withinactive);
-        //            dt_employees.TableName = "employees";
-        //            ds.Tables.Add(dt_employees);
-
-        //            res.respdata = ds;
-
-        //        }
-        //        return Request.CreateResponse(HttpStatusCode.OK, res);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        res.errno = 1;
-        //        res.errdesc = e.Message;
-        //        return Request.CreateResponse(HttpStatusCode.ExpectationFailed, res);
-        //    }
-        //}
 
     }
 }
