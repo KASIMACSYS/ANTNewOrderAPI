@@ -284,7 +284,7 @@ Public Class DAL_SalesOrder
         Return GetSalesmanOrder
     End Function
 
-    Public Function MA_OrderDashboard(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByVal _CID As Integer, ByVal _SalesmanID As Integer, ByRef iRC As Integer, ByRef ErrStr As String) As DataSet
+    Public Function MA_OrderDashboard(ByVal _StrDBPath As String, ByVal _StrDBPwd As String, ByVal _CID As Integer, ByVal _BSSPID As Integer, ByVal _SalesmanID As Integer, ByRef iRC As Integer, ByRef ErrStr As String) As DataSet
         'MA_QuotationDashboard = New DataSet
         Dim ds As New DataSet
 
@@ -295,6 +295,7 @@ Public Class DAL_SalesOrder
             BaseConn.cmd = New SqlClient.SqlCommand("[MA_OrderDashboard]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
             BaseConn.cmd.Parameters.AddWithValue("@CID", _CID)
+            BaseConn.cmd.Parameters.AddWithValue("@BSPID", _BSSPID)
             BaseConn.cmd.Parameters.AddWithValue("@SalesmanID", _SalesmanID)
             BaseConn.da = New SqlClient.SqlDataAdapter(BaseConn.cmd)
             BaseConn.da.Fill(ds)

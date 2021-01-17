@@ -44,6 +44,7 @@ CREATE PROCEDURE [dbo].[MA_GetConfigParam]
 	SET NOCOUNT ON;	
 	select tag, value from [configparam];
 	select tag, value from [GroupMgtGeneralSettings] WHERE CID = @CID AND GROUPID = @GroupID;
+	select Top 1 BusinessPeriodID, StartDate  FROM [BusinessPeriodMaster] WHERE CID=@CID ORDER BY BusinessPeriodID DESC;
 END
 
 GO
@@ -238,14 +239,17 @@ GO
 CREATE PROCEDURE [dbo].[MA_OrderDashboard]
  -- Add the parameters for the stored procedure here
 	 @CID			INT,
-	 @SalesManID	INT = 0
+	 @SalesManID	INT = 0,
+	 @BSPID			INT
  
 --UNLOCK-- WITH ENCRYPTION 
  AS 
  BEGIN  --- load to ItemMCCB
  SET NOCOUNT ON;
  
-	 select SOStatus, Count(*) Cnt from [SalesOrderMain] where cid = @CID and salesmanID = @SalesManID group by SOStatus;
+	SELECT 'Draft' AS SOStatus, Count(*) AS Cnt from [SalesOrderMain] where cid = 101 AND BusinessPeriodID = 106 and StatusCancel=2
+	UNION ALL
+	SELECT SOStatus, Count(*) AS Cnt from [SalesOrderMain] where cid = @CID AND BusinessPeriodID = @BSPID and salesmanID = @SalesManID group by SOStatus;
 
 	SELECT convert(char(6), SODate, 112) AS Month,
 			COUNT (CASE WHEN SOStatus = 'Open' THEN 1 END) AS [Open],
@@ -253,7 +257,7 @@ CREATE PROCEDURE [dbo].[MA_OrderDashboard]
 			COUNT (CASE WHEN SOStatus = 'Partial' THEN 1 END) AS [Partial],
 			COUNT (CASE WHEN SOStatus = 'Manually Closed' THEN 1 END) AS [ManualClose]
 	 FROM   [SalesOrderMain]
-	 WHERE  CID = @CID and SalesManID = @SalesManID and datediff (MONTH, SODate, sysdatetime()) < 4
+	 WHERE  CID = @CID AND BusinessPeriodID = @BSPID and SalesManID = @SalesManID and datediff (MONTH, SODate, sysdatetime()) < 4
 	 GROUP  BY convert(char(6), SODate, 112)
 	 ORDER  BY Month DESC
 

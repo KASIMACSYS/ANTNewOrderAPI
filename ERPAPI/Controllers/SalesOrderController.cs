@@ -90,7 +90,7 @@ namespace ERPAPI.Controllers
 
         [HttpGet]
         [Route("getorderdashboard")]
-        public HttpResponseMessage GetQuotationDashboard(int cid, int salesmanid)
+        public HttpResponseMessage GetQuotationDashboard(int cid, int salesmanid, int bspid)
         {
             cid = CID;
             ResponseObject res = new ResponseObject();
@@ -98,13 +98,13 @@ namespace ERPAPI.Controllers
             {
                 int errno = 0;
                 string errstring = string.Empty;
-                int[] arr_values = new int[4];
+                int[] arr_values = new int[5];
                 DataSet ds = new DataSet();
                 DataTable dtSalesmanQuotation = new DataTable();
                 DataTable dtMonthQuotation = new DataTable();
                 obj = new DAL_SalesOrder();
 
-                ds = obj.MA_OrderDashboard(DBPath, DBPwd, cid, salesmanid, ref errno, ref errstring);
+                ds = obj.MA_OrderDashboard(DBPath, DBPwd, cid, bspid, salesmanid, ref errno, ref errstring);
                 dtSalesmanQuotation = ds.Tables[0];
                 for (int i = 0; i < dtSalesmanQuotation.Rows.Count; i++)
                 {

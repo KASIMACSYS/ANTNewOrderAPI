@@ -75,6 +75,7 @@ namespace WebAPI.Controllers
                         dsConfigParam = obj_UserMgt.GetConfigParam(DBPath, DBPwd, cid, Convert.ToInt32(dtUserDetails.Rows[0]["GroupID"]));
                         dsConfigParam.Tables[0].TableName = "ConfigParam";
                         dsConfigParam.Tables[1].TableName = "GroupGeneralSetting";
+                        dsConfigParam.Tables[2].TableName = "BusinessPeriod";
                         int salesmanid = obj_UserMgt.GetSalesmanIDByLedgerID(DBPath, DBPwd, cid, Convert.ToInt32(dtUserDetails.Rows[0]["ledgerid"]));
                         res.respdata = new User() { userid = Convert.ToInt32(dtUserDetails.Rows[0]["UserID"]), username = username, ledgerid = Convert.ToInt32(dtUserDetails.Rows[0]["ledgerid"]), groupid = Convert.ToInt16(dtUserDetails.Rows[0]["GroupID"]), token = encrypttoken, configparam = dsConfigParam, salesmanid = salesmanid };
                     }
@@ -247,6 +248,15 @@ namespace WebAPI.Controllers
             dt.Rows.Add(drow);
 
             drow = dt.NewRow();
+            drow["FormName"] = "Dashboard";
+            drow["MenuID"] = "ERP_000";
+            drow["Parent"] = "30";
+            drow["WebIcon"] = "av_timer";
+            drow["parameters"] = "";
+            drow["TYPE"] = "FORM";
+            dt.Rows.Add(drow);
+
+            drow = dt.NewRow();
             drow["FormName"] = "Inventory";
             drow["MenuID"] = "31";
             drow["Parent"] = "1";
@@ -318,6 +328,13 @@ namespace WebAPI.Controllers
             drow["Options"] = "View";
             dt.Rows.Add(drow);
             //order list: end
+
+            //dashboard: start
+            drow = dt.NewRow();
+            drow["MenuID"] = "ERP_000";
+            drow["Options"] = "View";
+            dt.Rows.Add(drow);
+            //dashboard: end
 
             //new order: PriceList
             drow = dt.NewRow();
