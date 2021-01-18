@@ -20,9 +20,13 @@ namespace ERPAPI.Controllers
     [RoutePrefix("api/salesorder")]
     public class SalesOrderController : ApiController
     {
-        int CID = Convert.ToInt16(ConfigurationManager.AppSettings["CID"]);
+        
         String DBPath = ConfigurationManager.AppSettings["DBPath"].ToString();
         String DBPwd = ConfigurationManager.AppSettings["DBPwd"].ToString();
+        int CID = Convert.ToInt16(ConfigurationManager.AppSettings["CID"]);
+        String PREFIX = ConfigurationManager.AppSettings["PREFIX"];
+        String CURRENCY = ConfigurationManager.AppSettings["CURRENCY"];
+
         DAL_SalesOrder obj;
         DAL_General objGen;
         int BusinessPeriodID = 101;
@@ -336,7 +340,7 @@ namespace ERPAPI.Controllers
             errstring = obj.Update_SalesOrder(DBPath, DBPwd, ref soNo, ref revno, objcsSO, ref outsms, ref outemail, ref errno);
             //errstring = obj.Update_Quotation(ref qtnNo, ref revno, objcsqtn, ref outsms, ref outemail, ref errno);
             if (errstring == "" && soNo != "")
-                UpdateImage(objcsSO.int_CID.ToString(), objcsSO.objSalesOrderMain.str_FormPrefix + soNo, image, imagename, imagetype, username);
+                UpdateImage(objcsSO.int_CID.ToString(), PREFIX + soNo, image, imagename, imagetype, username);
 
             return soNo;
         }
@@ -367,7 +371,7 @@ namespace ERPAPI.Controllers
             objSO.objSalesOrderMain.str_SalOrd = "";
             objSO.objSalesOrderMain.int_BusinessPeriodID = objGen.GetLatestBusinessPeriodID(DBPath, DBPwd, CID);
             objSO.objSalesOrderMain.str_Flag = "ADD";
-            objSO.objSalesOrderMain.str_FormPrefix = "PER/";
+            objSO.objSalesOrderMain.str_FormPrefix = PREFIX;
             objSO.objSalesOrderMain.str_MenuID = "ERP_156";
             objSO.objSalesOrderMain.int_RevNo = 0;
             objSO.objSalesOrderMain.dtp_SODate = DateTime.Now;
@@ -382,7 +386,7 @@ namespace ERPAPI.Controllers
             objSO.objSalesOrderMain.str_SOStatus = "Open";
             objSO.objSalesOrderMain.str_MerchantRef = "";
             objSO.objSalesOrderMain.str_SalesManID = salesmanid.ToString();
-            objSO.objSalesOrderMain.str_TCCurrency = "AED";
+            objSO.objSalesOrderMain.str_TCCurrency = CURRENCY;
             objSO.objSalesOrderMain.dbl_ExchangeRate = 1;
             objSO.objSalesOrderMain.int_StatusCancel = 2;
             objSO.objSalesOrderMain.str_DeliveryAddress = "";
