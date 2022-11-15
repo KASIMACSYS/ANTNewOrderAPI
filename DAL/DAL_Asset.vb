@@ -21,6 +21,7 @@ Public Class DAL_Asset
         ErrNo = 0
         ErrStr = ""
         Try
+            Dim BaseConn As New SQLConn()
             BaseConn.Open(_StrDBPath, _StrDBPwd)
             BaseConn.cmd = New SqlClient.SqlCommand("[GetAssetDetails]", BaseConn.cnn)
             BaseConn.cmd.CommandType = CommandType.StoredProcedure
